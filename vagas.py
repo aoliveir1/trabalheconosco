@@ -131,4 +131,4 @@ def ftec_get_all_jobs():
 
     return json.dumps(jobs)
 
-run(app, host='localhost', port=8000)
+run(app, host='0.0.0.0', port=8000)
