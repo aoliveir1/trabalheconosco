@@ -1,1 +1,1 @@
-web: python vagas.py
+worker: python vagas.py
