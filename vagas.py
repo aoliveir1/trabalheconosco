@@ -1,3 +1,4 @@
+import os
 import time
 from splinter import Browser
 from bs4 import BeautifulSoup
