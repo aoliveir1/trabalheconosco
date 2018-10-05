@@ -126,12 +126,10 @@ def ftec_get_all_jobs():
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
     
-    browser = BaseWebDriver()
-    
     browser = Browser('chrome', chrome_options=options)
     browser.visit('http://educacional.ftec.com.br:8080/RM/Rhu-BancoTalentos/#/RM/Rhu-BancoTalentos/painelVagas/lista')
     
-    jobs = []
+    jobs = [{'nome': 'titulo', 'data': 'data', 'local': 'local', 'descricao': 'desc'}]
     time.sleep(5)
     if browser.is_element_present_by_text('Data de Publicação: ', wait_time=True):
         soup = BeautifulSoup(browser.html, 'html.parser')
