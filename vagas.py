@@ -119,7 +119,8 @@ def ftec_get_all_jobs():
     response.headers['Content-Type'] = 'application/json'
     response.headers['Cache-Control'] = 'no-cache'
 
-    browser = Browser('firefox', executable_path='/home/andre/Python/ucs/geckodriver')
+    #browser = Browser('firefox', executable_path='/home/andre/Python/ucs/geckodriver')
+    browser = Browser()
     browser.visit('http://educacional.ftec.com.br:8080/RM/Rhu-BancoTalentos/#/RM/Rhu-BancoTalentos/painelVagas/lista')
     time.sleep(10)
     soup = BeautifulSoup(browser.html, 'html.parser')
