@@ -1,14 +1,14 @@
 import os
 import time
-from splinter import Browser
+import json
 from bs4 import BeautifulSoup
 import urllib.request
 import bottle
 from bottle import get, response, run
-import json
+from splinter import Browser
+from splinter.driver.webdriver import BaseWebDriver, WebDriverElement
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
-from splinter.driver.webdriver import BaseWebDriver, WebDriverElement
 
 app = bottle.default_app()
 
@@ -123,15 +123,14 @@ def ftec_get_all_jobs():
     response.headers['Cache-Control'] = 'no-cache'
   
     options = Options()
-    #chrome_options.binary_location = GOOGLE_CHROME_BIN
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
     
     browser = BaseWebDriver()
     
-    #browser = Browser('chrome', executable_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
     browser = Browser('chrome', chrome_options=options)
     browser.visit('http://educacional.ftec.com.br:8080/RM/Rhu-BancoTalentos/#/RM/Rhu-BancoTalentos/painelVagas/lista')
+    print('debug 10s')
     time.sleep(10)
     soup = BeautifulSoup(browser.html, 'html.parser')
 
