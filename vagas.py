@@ -118,8 +118,13 @@ def ftec_get_description(soup):
 def ftec_get_all_jobs():
     response.headers['Content-Type'] = 'application/json'
     response.headers['Cache-Control'] = 'no-cache'
-
-    browser = Browser('chrome')
+  
+    chrome_options = Options()
+    chrome_options.binary_location = GOOGLE_CHROME_BIN
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--no-sandbox')
+    
+    browser = Browser('chrome', executable_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
     browser.visit('http://educacional.ftec.com.br:8080/RM/Rhu-BancoTalentos/#/RM/Rhu-BancoTalentos/painelVagas/lista')
     time.sleep(10)
     soup = BeautifulSoup(browser.html, 'html.parser')
