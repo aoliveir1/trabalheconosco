@@ -114,7 +114,7 @@ def ftec_get_description(soup):
             list_desc.append(desc.replace('</p>', '').replace('<br/>', '').replace('\n', ''))
     return list_desc
 
-@get('/jobs_ftec')
+@get('/jobs_uniftec')
 def ftec_get_all_jobs():
     response.headers['Content-Type'] = 'application/json'
     response.headers['Cache-Control'] = 'no-cache'
