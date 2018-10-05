@@ -132,6 +132,7 @@ def ftec_get_all_jobs():
     
     jobs = []
     if browser.is_element_present_by_text('Data de Publicação: ', wait_time=True):
+        print('\n\nhere\n\n')
         soup = BeautifulSoup(browser.html, 'html.parser')
         for titulo, data, local, desc in zip(ftec_get_names(soup), ftec_get_date_published(soup), ftec_get_place(soup), ftec_get_description(soup)):
             d = {'nome': titulo, 'data': data, 'local': local, 'descricao': desc}
