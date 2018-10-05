@@ -125,7 +125,7 @@ def ftec_get_all_jobs():
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
     
-    #browser = BaseWebDriver()
+    browser = BaseWebDriver()
     
     browser = Browser('chrome', chrome_options=options)
     browser.visit('http://educacional.ftec.com.br:8080/RM/Rhu-BancoTalentos/#/RM/Rhu-BancoTalentos/painelVagas/lista')
