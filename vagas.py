@@ -125,7 +125,7 @@ def ftec_get_all_jobs():
     #chrome_options.add_argument('--no-sandbox')
     
     #browser = Browser('chrome', executable_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
-    browser = Browser('chrome', executable_path=CHROMEDRIVER_PATH)
+    browser = Browser('chrome', executable_path=$CHROMEDRIVER_PATH)
     browser.visit('http://educacional.ftec.com.br:8080/RM/Rhu-BancoTalentos/#/RM/Rhu-BancoTalentos/painelVagas/lista')
     time.sleep(10)
     soup = BeautifulSoup(browser.html, 'html.parser')
