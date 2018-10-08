@@ -122,11 +122,12 @@ def ftec_get_all_jobs():
     response.headers['Content-Type'] = 'application/json'
     response.headers['Cache-Control'] = 'no-cache'
   
-    options = Options()
-    options.add_argument('--disable-gpu')
-    options.add_argument('--no-sandbox')
+    #options = Options()
+    #options.add_argument('--disable-gpu')
+    #options.add_argument('--no-sandbox')
     
-    browser = Browser('chrome', chrome_options=options)
+    #browser = Browser('chrome', chrome_options=options)
+    browser = Browser('chrome', headless = True)
     browser.visit('http://educacional.ftec.com.br:8080/RM/Rhu-BancoTalentos/#/RM/Rhu-BancoTalentos/painelVagas/lista')
     
     jobs = [{'nome': 'titulo', 'data': 'data', 'local': 'local', 'descricao': 'desc'}]
