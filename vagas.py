@@ -83,7 +83,7 @@ jobs = soup.find_all('div', {'class': 'div_vagas'})
 def hg_get_job(job):
     pos_start = job.find('titulo_vagas')
     pos_end = job.find('<',pos_start)
-    job = job[pos_start+15:pos_end].strip()
+    job = job[pos_start+15:pos_end].strip().capitalize()
     return job
 
 def hg_get_sector(job):
