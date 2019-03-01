@@ -126,7 +126,7 @@ def hg_get_requirements(job):
     return job[pos_start+10:pos_end].strip()
 
 @get('/jobs_hg')
-def get_all_jobs():
+def hg_get_all_jobs():
     v=[]
 
     response.headers['Content-Type'] = 'application/json'
@@ -206,7 +206,7 @@ def ftec_get_all_jobs():
     browser.visit('http://educacional.ftec.com.br:8080/RM/Rhu-BancoTalentos/#/RM/Rhu-BancoTalentos/painelVagas/lista')
     
     jobs = [{'nome': 'titulo', 'data': 'data', 'local': 'local', 'descricao': 'desc'}]
-    time.sleep(5)
+    time.sleep(1)
     if browser.is_element_present_by_text('Data de Publicação: ', wait_time=True):
         soup = BeautifulSoup(browser.html, 'html.parser')
         for titulo, data, local, desc in zip(ftec_get_names(soup), ftec_get_date_published(soup), ftec_get_place(soup), ftec_get_description(soup)):
