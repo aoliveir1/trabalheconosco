@@ -16,60 +16,60 @@ app = bottle.default_app()
 UCS
 '''
 
-page = urllib.request.urlopen('https://sou.ucs.br/recursos_humanos/cadastro_curriculo/')
-soup = BeautifulSoup(page, 'html.parser')
-jobs = soup.find_all('li')
+page_ucs = urllib.request.urlopen('https://sou.ucs.br/recursos_humanos/cadastro_curriculo/')
+soup_ucs = BeautifulSoup(page_ucs, 'html.parser')
+jobs_ucs = soup_ucs.find_all('li')
 
-def ucs_get_job(job):
-    pos_start = job.find('"/>')
-    pos_end = job.find('<',pos_start)
-    job = job[pos_start+3:pos_end].strip()
-    return job
+def ucs_get_job(job_ucs):
+    pos_start = job_ucs.find('"/>')
+    pos_end = job_ucs.find('<',pos_start)
+    job_ucs = job_ucs[pos_start+3:pos_end].strip()
+    return job_ucs
 
-def ucs_get_formation(job):
-    pos_reference = job.find('<label>Formação:</label>')
+def ucs_get_formation(job_ucs):
+    pos_reference = job_ucs.find('<label>Formação:</label>')
     if pos_reference > 0:
-        pos_start = job.find('">', pos_reference)
-        pos_end = job.find('</div>', pos_start)
-        return job[pos_start+2:pos_end].strip()
+        pos_start = job_ucs.find('">', pos_reference)
+        pos_end = job_ucs.find('</div>', pos_start)
+        return job_ucs[pos_start+2:pos_end].strip()
     else:
-        return '(não informado)'
+        return '(Não informado.)'
 
-def ucs_get_locale(job):
-    pos_reference = job.find('<label>Localidade:</label>')
-    pos_start = job.find('">', pos_reference)
-    pos_end = job.find('</div>', pos_start)
-    return job[pos_start+2:pos_end].strip()
+def ucs_get_locale(job_ucs):
+    pos_reference = job_ucs.find('<label>Localidade:</label>')
+    pos_start = job_ucs.find('">', pos_reference)
+    pos_end = job_ucs.find('</div>', pos_start)
+    return job_ucs[pos_start+2:pos_end].strip()
 
-def ucs_get_turn(job):
-    pos_reference = job.find('<label>Turno:</label>')
-    pos_start = job.find('">', pos_reference)
-    pos_end = job.find('</div>', pos_start)
-    return job[pos_start+2:pos_end].strip().replace('\n', '').replace(' ', '').replace(',', ', ')
+def ucs_get_turn(job_ucs):
+    pos_reference = job_ucs.find('<label>Turno:</label>')
+    pos_start = job_ucs.find('">', pos_reference)
+    pos_end = job_ucs.find('</div>', pos_start)
+    return job_ucs[pos_start+2:pos_end].strip().replace('\n', '').replace(' ', '').replace(',', ', ')
 
-def ucs_get_description(job):
-    pos_ini = job.find('Descrição:')
-    pos_ini = job.find('">', pos_ini)
-    pos_fin = job.find('</div>', pos_ini)
-    return job[pos_ini + 2:pos_fin].replace('\r\n', ' ')
+def ucs_get_description(job_ucs):
+    pos_ini = job_ucs.find('Descrição:')
+    pos_ini = job_ucs.find('">', pos_ini)
+    pos_fin = job_ucs.find('</div>', pos_ini)
+    return job_ucs[pos_ini + 2:pos_fin].replace('\r\n', ' ')
 
 @get('/jobs_ucs')
 def ucs_get_all_jobs():
-    v=[]
+    v_ucs=[]
 
     response.headers['Content-Type'] = 'application/json'
     response.headers['Cache-Control'] = 'no-cache'
 
-    for job in jobs:
-        job = str(job)
-        d = {'vaga': ucs_get_job(job),
-             'formacao': ucs_get_formation(job),
-             'localidade': ucs_get_locale(job),
-             'turno': ucs_get_turn(job),
-             'descricao': ucs_get_description(job)}
-        v.append(d)
+    for job_ucs in jobs_ucs:
+        job_ucs = str(job_ucs)
+        d_ucs = {'vaga': ucs_get_job(job_ucs),
+                 'formacao': ucs_get_formation(job_ucs),
+                 'localidade': ucs_get_locale(job_ucs),
+                 'turno': ucs_get_turn(job_ucs),
+                 'descricao': ucs_get_description(job_ucs)}
+        v_ucs.append(d_ucs)
 
-    return json.dumps(v)
+    return json.dumps(v_ucs)
 
 
 '''
