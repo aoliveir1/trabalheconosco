@@ -57,8 +57,8 @@ def ucs_get_description(job_ucs):
 def ucs_get_all_jobs():
     v_ucs=[]
 
-    response.headers['Content-Type'] = 'application/json'
-    response.headers['Cache-Control'] = 'no-cache'
+    #response.headers['Content-Type'] = 'application/json'
+    #response.headers['Cache-Control'] = 'no-cache'
 
     for job_ucs in jobs_ucs:
         job_ucs = str(job_ucs)
@@ -129,8 +129,8 @@ def hg_get_requirements(job):
 def hg_get_all_jobs():
     v=[]
 
-    response.headers['Content-Type'] = 'application/json'
-    response.headers['Cache-Control'] = 'no-cache'
+    #response.headers['Content-Type'] = 'application/json'
+    #response.headers['Cache-Control'] = 'no-cache'
 
     for job in jobs:
         job = str(job)
