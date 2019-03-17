@@ -227,18 +227,17 @@ for job in zip(jobs_flexxo1, jobs_flexxo2):
     for link in links:
         jobs_flexxo.append({'vaga': link.text.strip(), 'link': link['href']})
 
-v = []
-for i, link in enumerate(jobs_flexxo):
-    if i < len(qtd):
-        req = urllib.request.Request(url+link['link'], headers=headers)
-        page = urllib.request.urlopen(req)
-        soup = BeautifulSoup(page, 'html.parser')
-        job = soup.find_all('div', {'class': 'texto'})
-        for j in job:
-            v.append({'vaga': link['vaga'], 'descricao': str(j.text).strip().replace('\r', '').replace('\t', '').replace('\n', ' ').replace('  ', ' ')})
-
 @get('/jobs_flexxo')
 def flexxo_get_all_jobs():
+    v = []
+    for i, link in enumerate(jobs_flexxo):
+        if i < len(qtd):
+            req = urllib.request.Request(url+link['link'], headers=headers)
+            page = urllib.request.urlopen(req)
+            soup = BeautifulSoup(page, 'html.parser')
+            job = soup.find_all('div', {'class': 'texto'})
+            for j in job:
+                v.append({'vaga': link['vaga'], 'descricao': str(j.text).strip().replace('\r', '').replace('\t', '').replace('\n', ' ').replace('  ', ' ')})
     return json.dumps(v)
 
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
