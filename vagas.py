@@ -33,7 +33,7 @@ def ucs_get_formation(job_ucs):
         pos_end = job_ucs.find('</div>', pos_start)
         return job_ucs[pos_start+2:pos_end].strip()
     else:
-        return '(Não informado.)'
+        return 'Não informado.'
 
 def ucs_get_locale(job_ucs):
     pos_reference = job_ucs.find('<label>Localidade:</label>')
@@ -56,9 +56,6 @@ def ucs_get_description(job_ucs):
 @get('/jobs_ucs')
 def ucs_get_all_jobs():
     v_ucs=[]
-
-    #response.headers['Content-Type'] = 'application/json'
-    #response.headers['Cache-Control'] = 'no-cache'
 
     for job_ucs in jobs_ucs:
         job_ucs = str(job_ucs)
