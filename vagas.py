@@ -126,9 +126,6 @@ def hg_get_requirements(job):
 def hg_get_all_jobs():
     v=[]
 
-    #response.headers['Content-Type'] = 'application/json'
-    #response.headers['Cache-Control'] = 'no-cache'
-
     for job in jobs:
         job = str(job)
         d = {'vaga': hg_get_job(job),
@@ -140,7 +137,6 @@ def hg_get_all_jobs():
         v.append(d)
 
     return json.dumps(v)
-
 
 
 '''
@@ -193,12 +189,7 @@ def ftec_get_description(soup):
 def ftec_get_all_jobs():
     response.headers['Content-Type'] = 'application/json'
     response.headers['Cache-Control'] = 'no-cache'
-  
-    #options = Options()
-    #options.add_argument('--disable-gpu')
-    #options.add_argument('--no-sandbox')
-    
-    #browser = Browser('chrome', chrome_options=options)
+
     browser = Browser('chrome', headless = True)
     browser.visit('http://educacional.ftec.com.br:8080/RM/Rhu-BancoTalentos/#/RM/Rhu-BancoTalentos/painelVagas/lista')
     
@@ -218,9 +209,6 @@ def ftec_get_all_jobs():
 Flexxo
 '''
 
-'''
-flexxo
-'''
 url = 'http://www.flexxo.com.br/Caxias+do+Sul/oportunidades/'
 headers = {'User-Agent': 'Mozilla/5.0'}
 req = urllib.request.Request(url, headers=headers)
