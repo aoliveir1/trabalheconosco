@@ -214,4 +214,43 @@ def ftec_get_all_jobs():
 
     return json.dumps(jobs)
 
+'''
+Flexxo
+'''
+
+'''
+flexxo
+'''
+url = 'http://www.flexxo.com.br/Caxias+do+Sul/oportunidades/'
+headers = {'User-Agent': 'Mozilla/5.0'}
+req = urllib.request.Request(url, headers=headers)
+page = urllib.request.urlopen(req)
+soup = BeautifulSoup(page, 'html.parser')
+jobs_flexxo1 = soup.find_all('div', {'class': 'oportunidade rounded'})
+jobs_flexxo = soup.find('div', {'class': 'oportunidade rounded'})
+soup_qtd = BeautifulSoup(str(jobs_flexxo), 'html.parser')
+qtd = soup_qtd.find_all('a')
+jobs_flexxo2 = soup.find_all('div', {'class': 'oportunidade rounded last'})
+
+jobs_flexxo = []
+for job in zip(jobs_flexxo1, jobs_flexxo2):
+    soup = BeautifulSoup(str(job), 'html.parser')
+    links = soup.find_all('a')
+    for link in links:
+        jobs_flexxo.append({'vaga': link.text.strip(), 'link': link['href']})
+
+v = []
+for i, link in enumerate(jobs_flexxo):
+    if i < len(qtd):
+        req = urllib.request.Request(url+link['link'], headers=headers)
+        page = urllib.request.urlopen(req)
+        soup = BeautifulSoup(page, 'html.parser')
+        job = soup.find_all('div', {'class': 'texto'})
+        for j in job:
+            v.append({'vaga': link['vaga'], 'descricao': str(j.text).strip().replace('\r', '').replace('\t', '').replace('\n', ' ').replace('  ', ' ')})
+
+@get('/jobs_flexxo')
+def flexxo_get_all_jobs():
+    return json.dumps(v)
+
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
