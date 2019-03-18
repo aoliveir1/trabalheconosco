@@ -224,8 +224,10 @@ for job in zip(jobs_flexxo1, jobs_flexxo2):
     for link in links:
         jobs_flexxo.append({'vaga': link.text.strip(), 'link': link['href']})
 
+print(jobs_flexxo)
 @get('/jobs_flexxo')
 def flexxo_get_all_jobs():
+    print(len(jobs_flexxo)
     v_flexxo = []
     for i, link in enumerate(jobs_flexxo):
         if i < len(qtd):
@@ -235,6 +237,7 @@ def flexxo_get_all_jobs():
             job = soup.find_all('div', {'class': 'texto'})
             for j in job:
                 v_flexxo.append({'vaga': link['vaga'], 'descricao': str(j.text).strip().replace('\r', '').replace('\t', '').replace('\n', ' ').replace('  ', ' ')})
+    print(v_flexxo)
     return json.dumps(v_flexxo)
 
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
