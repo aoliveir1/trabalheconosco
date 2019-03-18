@@ -15,7 +15,6 @@ app = bottle.default_app()
 '''
 UCS
 '''
-
 page_ucs = urllib.request.urlopen('https://sou.ucs.br/recursos_humanos/cadastro_curriculo/')
 soup_ucs = BeautifulSoup(page_ucs, 'html.parser')
 jobs_ucs = soup_ucs.find_all('li')
@@ -67,7 +66,6 @@ def ucs_get_all_jobs():
         v_ucs.append(d_ucs)
 
     return json.dumps(v_ucs)
-
 
 '''
 HG
@@ -124,20 +122,19 @@ def hg_get_requirements(job):
 
 @get('/jobs_hg')
 def hg_get_all_jobs():
-    v=[]
+    v_hg=[]
 
     for job in jobs:
         job = str(job)
-        d = {'vaga': hg_get_job(job),
+        d_hg = {'vaga': hg_get_job(job),
              'setor': hg_get_sector(job),
              'carga horaria': hg_get_working_hours(job),
              'horario': hg_get_schedule(job),
              'contrato': hg_get_contract(job),
              'requisito': hg_get_requirements(job)}
-        v.append(d)
+        v_hg.append(d_hg)
 
-    return json.dumps(v)
-
+    return json.dumps(v_hg)
 
 '''
 FTEC
@@ -215,8 +212,8 @@ req = urllib.request.Request(url, headers=headers)
 page = urllib.request.urlopen(req)
 soup = BeautifulSoup(page, 'html.parser')
 jobs_flexxo1 = soup.find_all('div', {'class': 'oportunidade rounded'})
-jobs_flexxo = soup.find('div', {'class': 'oportunidade rounded'})
-soup_qtd = BeautifulSoup(str(jobs_flexxo), 'html.parser')
+#jobs_flexxo = soup.find('div', {'class': 'oportunidade rounded'})
+soup_qtd = BeautifulSoup(str(jobs_flexxo1), 'html.parser')
 qtd = soup_qtd.find_all('a')
 jobs_flexxo2 = soup.find_all('div', {'class': 'oportunidade rounded last'})
 
@@ -229,7 +226,7 @@ for job in zip(jobs_flexxo1, jobs_flexxo2):
 
 @get('/jobs_flexxo')
 def flexxo_get_all_jobs():
-    v = []
+    v_flexxo = []
     for i, link in enumerate(jobs_flexxo):
         if i < len(qtd):
             req = urllib.request.Request(url+link['link'], headers=headers)
@@ -237,7 +234,7 @@ def flexxo_get_all_jobs():
             soup = BeautifulSoup(page, 'html.parser')
             job = soup.find_all('div', {'class': 'texto'})
             for j in job:
-                v.append({'vaga': link['vaga'], 'descricao': str(j.text).strip().replace('\r', '').replace('\t', '').replace('\n', ' ').replace('  ', ' ')})
-    return json.dumps(v)
+                v_flexxo.append({'vaga': link['vaga'], 'descricao': str(j.text).strip().replace('\r', '').replace('\t', '').replace('\n', ' ').replace('  ', ' ')})
+    return json.dumps(v_flexxo)
 
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
