@@ -205,27 +205,26 @@ def ftec_get_all_jobs():
 '''
 Flexxo
 '''
-
-url = 'http://www.flexxo.com.br/Caxias+do+Sul/oportunidades/'
-headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linu…) Gecko/20100101 Firefox/65.0'.encode('utf-8')}
-req = urllib.request.Request(url, headers=headers)
-page = urllib.request.urlopen(req)
-soup = BeautifulSoup(page, 'html.parser')
-jobs_flexxo1 = soup.find_all('div', {'class': 'oportunidade rounded'})
-jobs_flexxo_qtd = soup.find('div', {'class': 'oportunidade rounded'})
-soup_qtd = BeautifulSoup(str(jobs_flexxo_qtd), 'html.parser')
-qtd = soup_qtd.find_all('a')
-jobs_flexxo2 = soup.find_all('div', {'class': 'oportunidade rounded last'})
-
-jobs_flexxo = []
-for job in zip(jobs_flexxo1, jobs_flexxo2):
-    soup = BeautifulSoup(str(job), 'html.parser')
-    links = soup.find_all('a')
-    for link in links:
-        jobs_flexxo.append({'vaga': link.text.strip(), 'link': link['href']})
-
 @get('/jobs_flexxo')
 def flexxo_get_all_jobs():
+    url = 'http://www.flexxo.com.br/Caxias+do+Sul/oportunidades/'
+    headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linu…) Gecko/20100101 Firefox/65.0'.encode('utf-8')}
+    req = urllib.request.Request(url, headers=headers)
+    page = urllib.request.urlopen(req)
+    soup = BeautifulSoup(page, 'html.parser')
+    jobs_flexxo1 = soup.find_all('div', {'class': 'oportunidade rounded'})
+    jobs_flexxo_qtd = soup.find('div', {'class': 'oportunidade rounded'})
+    soup_qtd = BeautifulSoup(str(jobs_flexxo_qtd), 'html.parser')
+    qtd = soup_qtd.find_all('a')
+    jobs_flexxo2 = soup.find_all('div', {'class': 'oportunidade rounded last'})
+
+    jobs_flexxo = []
+    for job in zip(jobs_flexxo1, jobs_flexxo2):
+        soup = BeautifulSoup(str(job), 'html.parser')
+        links = soup.find_all('a')
+        for link in links:
+            jobs_flexxo.append({'vaga': link.text.strip(), 'link': link['href']})
+
     v_flexxo = []
     for i, link in enumerate(jobs_flexxo):
         if i < len(qtd):
@@ -238,4 +237,32 @@ def flexxo_get_all_jobs():
 
     return json.dumps(v_flexxo)
 
+'''
+Randon
+'''
+
+@get('/jobs_randon')
+def randon_get_all_jobs():
+    url = 'https://randon.gupy.io'
+    page = urllib.request.urlopen(url)
+    soup = BeautifulSoup(page, 'html.parser')
+    jobs_randon1 = soup.find_all('tr', {'data-workplace': 'Caxias do Sul'})
+    v_randon = []
+    for job in jobs_randon1:
+        soup = BeautifulSoup(str(job), 'html.parser')
+        titulo = soup.find('span', {'class': 'title'})
+        url_vaga = url+job.a['href']
+        page_vaga = urllib.request.urlopen(url_vaga)
+        soup = BeautifulSoup(page_vaga, 'html.parser')
+        vaga_desc = soup.find_all('div', {'class': 'description'})
+        vaga_str = ''
+        for desc in vaga_desc:
+            vaga_str += str(desc.text).strip().replace('\n', ' ').replace('\r', ' ').replace('\t', ' ').replace('  ', ' ')
+        ini = (len(vaga_str) * 20) / 100
+        fim = (len(vaga_str) * 40) / 100
+        desc = (vaga_str[int(ini):int(fim)]).replace('  ', ' ')
+        d_randon = {'vaga': str(titulo.text).strip(), 'desc': desc, 'link': url_vaga}
+        v_randon.append(d_randon)
+    return json.dumps(v_randon)
+        
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
