@@ -227,7 +227,7 @@ for job in zip(jobs_flexxo1, jobs_flexxo2):
 print(jobs_flexxo)
 @get('/jobs_flexxo')
 def flexxo_get_all_jobs():
-    print(len(jobs_flexxo)
+    print(len(jobs_flexxo))
     v_flexxo = []
     for i, link in enumerate(jobs_flexxo):
         if i < len(qtd):
