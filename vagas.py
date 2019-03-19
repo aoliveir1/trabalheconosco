@@ -253,8 +253,8 @@ def randon_get_all_jobs():
     for job in jobs_randon1:
         soup = BeautifulSoup(str(job), 'html.parser')
         titulo = soup.find('span', {'class': 'title'})
-        url_vaga = '<a href="'+url+job.a['href']+'">Clique para ir para a descrição completa</a>'
-        page_vaga = urllib.request.urlopen(url+job.a['href'])
+        url_vaga = url+job.a['href']
+        page_vaga = urllib.request.urlopen(url_vaga)
         soup = BeautifulSoup(page_vaga, 'html.parser')
         vaga_desc = soup.find_all('div', {'class': 'description'})
         vaga_str = ''
