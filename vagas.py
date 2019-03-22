@@ -241,16 +241,7 @@ def randon_get_all_jobs():
         soup = BeautifulSoup(str(job), 'html.parser')
         titulo = soup.find('span', {'class': 'title'})
         url_vaga = url+job.a['href']
-        page_vaga = urllib.request.urlopen(url_vaga)
-        soup = BeautifulSoup(page_vaga, 'html.parser')
-        vaga_desc = soup.find_all('div', {'class': 'description'})
-        vaga_str = ''
-        for desc in vaga_desc:
-            vaga_str += str(desc.text).strip().replace('\n', ' ').replace('\r', ' ').replace('\t', ' ').replace('  ', ' ')
-        ini = (len(vaga_str) * 20) / 100
-        fim = (len(vaga_str) * 40) / 100
-        desc = (vaga_str[int(ini):int(fim)]).replace('  ', ' ')
-        d_randon = {'vaga': str(titulo.text).strip(), 'descricao': desc, 'link': url_vaga}
+        d_randon = {'vaga': str(titulo.text).strip(), 'link': url_vaga}
         v_randon.append(d_randon)
     return json.dumps(v_randon)
         
