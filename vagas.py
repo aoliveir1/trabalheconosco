@@ -259,9 +259,10 @@ def menon_get_all_jobs():
     container = soup.find_all('div', {'class': 'container'})
     soup = BeautifulSoup(str(container), 'html.parser')
     jobs = soup.find_all('p', {'style': 'text-align: justify; '})
-    jobs_menon = []
+    v_menon = []
     for job in jobs:
-        jobs_menon.append(job.text.strip())
-    return json.dumps(jobs_menon)
+        d_menon = {'vaga': job.text.strip()}
+        v_menon.append(d_menon)
+    return json.dumps(v_menon)
     
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
