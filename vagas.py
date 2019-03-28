@@ -265,4 +265,47 @@ def menon_get_all_jobs():
         v_menon.append(d_menon)
     return json.dumps(v_menon)
     
+'''
+RBS
+'''
+@get('/jobs_rbs')
+def rbs_get_all_jobs():
+    headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linu…) Gecko/20100101 Firefox/65.0'.encode('utf-8')}
+    url='http://www.gruporbs.com.br/talentosrbs/trabalhe-conosco/page/'
+    n = 1
+    all_jobs = []
+    while True:
+        req = urllib.request.Request(url+str(n), headers=headers)
+        page = urllib.request.urlopen(req)
+        soup = BeautifulSoup(page, 'html.parser')
+        jobs = soup.find_all('article', {'class': 'post'})
+        all_jobs.append(jobs)
+        if '<li class="next">' in str(soup):
+            n += 1
+        else:
+            break
+    jobs_rbs = []
+    for jobs in all_jobs:
+        for job in jobs:
+            soup = BeautifulSoup(str(job), 'html.parser')
+            titulo = soup.find('h1')
+            if 'Caxias do Sul' in titulo.text:
+                vaga = titulo.text
+                link = soup.find('a')
+                link = link['href']
+                desc = soup.find_all('div', {'class': 'blog-content text'})
+                soup_desc = BeautifulSoup(str(desc), 'html.parser')
+                desc = soup_desc.text.strip()
+                pos_start = desc.find('lidades:')
+                pos_end = desc.find('Requisitos:', pos_start)
+                responsabilidades = desc[pos_start+8:pos_end]
+                responsabilidades = responsabilidades.replace('\n\n', ' ').strip()
+                pos_start = desc.find('itos:')
+                pos_end = desc.find('Para proteção', pos_start)
+                requisitos = desc[pos_start+5:pos_end]
+                requisitos = requisitos.replace('\n\n', ' ').strip()
+                d = {'vaga': vaga, 'responsabilidades': responsabilidades, 'requisitos': requisitos, 'link': link}
+                jobs_rbs.append(d)
+    return json.dumps(jobs_rbs)
+
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
