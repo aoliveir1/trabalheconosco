@@ -340,6 +340,6 @@ def circulo_get_all_jobs():
              'requisitos': requisitos,
              'competencias': competencias}
         jobs_circulo.append(d)
-       return json.dumps(jobs_circulo)
+    return json.dumps(jobs_circulo)
 
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
