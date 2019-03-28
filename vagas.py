@@ -245,4 +245,23 @@ def randon_get_all_jobs():
         v_randon.append(d_randon)
     return json.dumps(v_randon)
         
+'''
+Menon
+'''
+
+@get('/jobs_menon')
+def menon_get_all_jobs():
+    url='http://www.menonatacadista.com.br/trabalhe-conosco'
+    headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linu…) Gecko/20100101 Firefox/65.0'.encode('utf-8')}
+    req = urllib.request.Request(url, headers=headers)
+    page = urllib.request.urlopen(req)
+    soup = BeautifulSoup(page, 'html.parser')
+    container = soup.find_all('div', {'class': 'container'})
+    soup = BeautifulSoup(str(container), 'html.parser')
+    jobs = soup.find_all('p', {'style': 'text-align: justify; '})
+    jobs_menon = []
+    for job in jobs:
+        jobs_menon.append(job.text.strip())
+    return json.dumps(jobs_menon)
+    
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
