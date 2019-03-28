@@ -308,4 +308,38 @@ def rbs_get_all_jobs():
                 jobs_rbs.append(d)
     return json.dumps(jobs_rbs)
 
+'''
+Circulo
+'''
+
+@get('/jobs_circulo')
+def circulo_get_all_jobs():
+    url = 'https://circulosaude.com.br/fale-conosco/trabalhe-conosco/'
+    headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linu…) Gecko/20100101 Firefox/65.0'.encode('utf-8')}
+    req = urllib.request.Request(url, headers=headers)
+    page = urllib.request.urlopen(req)
+    soup = BeautifulSoup(page, 'html.parser')
+    jobs = soup.find_all('div', {'class': 'l-oportunidade'})
+    jobs_circulo = []
+    for job in jobs:
+        soup = BeautifulSoup(str(job), 'html.parser')
+        vaga = soup.find('p', {'class': 'negrito'})
+        vaga = vaga.text
+        desc = soup.find('ul')
+        desc = str(desc.text)
+        pos1 = desc.find('Horário:')
+        pos2 = desc.find('Local:', pos1)
+        horario = (desc[pos1+8:pos2]).strip()
+        pos1 = desc.find('Requisitos:')
+        local = (desc[pos2+6:pos1]).strip()
+        pos2 = desc.find('Competências necessárias:')
+        requisitos = (desc[pos1+11:pos2]).strip()
+        competencias = (desc[pos2+len('Competências necessárias:'):]).strip()
+        d = {'vaga': vaga,
+             'horario': horario,
+             'requisitos': requisitos,
+             'competencias': competencias}
+        jobs_circulo.append(d)
+       return json.dumps(jobs_circulo)
+
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
