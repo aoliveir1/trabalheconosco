@@ -398,5 +398,54 @@ def senac_get_all_jobs():
         
     return json.dumps(jobs_senac)
         
-         
+'''
+STV
+'''
+@get('/jobs_stv')
+def stv_get_all_jobs():
+    url = 'http://rh.stv.com.br/'
+    headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linu…) Gecko/20100101 Firefox/65.0'.encode('utf-8')}
+    req = urllib.request.Request(url, headers=headers)
+    page = urllib.request.urlopen(req)
+    soup = BeautifulSoup(page, 'html.parser')
+    table = soup.find('table', {'class': 'table table-striped'})
+    soup = BeautifulSoup(str(table), 'html.parser')
+    tr = soup.find_all('tr')
+    links = []
+    for td in tr:
+        if 'Caxias do Sul' in str(td):
+            soup = BeautifulSoup(str(td), 'html.parser')
+            a = soup.find('a')
+            links.append((a.text, a['href']))
+
+    jobs_stv = []
+    for link in links:
+        req = urllib.request.Request(link[1], headers=headers)
+        page = urllib.request.urlopen(req)
+        soup = BeautifulSoup(page, 'html.parser')
+        vaga = soup.find('div', {'class': 'col-md-12'})
+        vaga = str(vaga.text).strip()
+        pos1 = vaga.find('Descrição:')
+        pos2 = vaga.find('Habilidades:')
+        descricao = (vaga[pos1+10:pos2]).strip()
+        pos1 = vaga.find('Localidade:', pos2)
+        habilidade = (vaga[pos2+12:pos1]).strip()
+        pos2 = vaga.find('Horário:')
+        localidade = (vaga[pos1+11:pos2]).strip()
+        pos1 = vaga.find('Forma de Contratação', pos2)
+        horario = (vaga[pos2+8:pos1]).strip()
+        pos2 = vaga.find('Benefícios:', pos1)
+        contrato = (vaga[pos1+20:pos2]).strip()
+        pos1 = vaga.find('Remuneração:', pos2)
+        beneficios = (vaga[pos2+11:pos1]).strip()
+        pos2 = vaga.find('Observação:', pos1)
+        remuneracao = (vaga[pos1+12:pos2]).strip()
+        pos1 = vaga.find('Candidatar-se', pos2)
+        observacao = (vaga[pos2+11:pos1]).strip()
+        d = {'vaga': link[0], 'descricao': descricao, 'habilidades': habilidade, 'localidade': localidade, 'horario': horario,
+             'contrato': contrato, 'beneficios': beneficios, 'remuneracao': remuneracao, 'observacao': observacao}
+        jobs_stv.append(d)
+        
+    return json.dumps(jobs_stv)
+
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
