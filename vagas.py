@@ -342,4 +342,61 @@ def circulo_get_all_jobs():
         jobs_circulo.append(d)
     return json.dumps(jobs_circulo)
 
+'''
+Senac
+'''
+
+@get('/jobs_senac')
+def senac_get_all_jobs():
+    url = ' https://trabalheconosco.senacrs.com.br/vagas/em-processo-de-selecao'
+    headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linu…) Gecko/20100101 Firefox/65.0'.encode('utf-8')}
+    req = urllib.request.Request(url, headers=headers)
+    page = urllib.request.urlopen(req)
+    soup = BeautifulSoup(page, 'html.parser')
+    jobs = soup.find('dl', {'class': 'vagas'})
+
+    links = []
+    if '<dt>Caxias do Sul</dt>' in str(jobs):
+        pos_start = str(jobs).find('<dt>Caxias do Sul</dt>')
+        pos_end = str(jobs).find('<dt>', pos_start+1)
+        jobs = str(jobs)[pos_start:pos_end]
+
+        soup = BeautifulSoup(str(jobs), 'html.parser')
+        jobs = soup.find_all('a')
+
+        url = 'https://trabalheconosco.senacrs.com.br'
+        for job in jobs:
+            links.append(url+job['href'])
+
+    jobs_senac = []
+    for link in get_links():
+        req = urllib.request.Request(link, headers=headers)
+        page = urllib.request.urlopen(req)
+        soup = BeautifulSoup(page, 'html.parser')
+        detalhes = soup.find('dl', {'class': 'detalhes-vaga'})
+        soup = BeautifulSoup(str(detalhes), 'html.parser')
+        vaga = soup.find('dt')
+        desc = []
+        for v in vaga:
+            desc.append(str(v).strip())
+            break
+        dados = soup.find_all('div', {'class': 'dados'})
+        for dado in dados:
+            soup = BeautifulSoup(str(dado), 'html.parser')
+            span = soup.find('span')
+            desc.append(str(span.text).strip())
+
+        d_senac = {'vaga': desc[0],
+                   'unidade': desc[1],
+                   'area': desc[3],
+                   'formacao': desc[4],
+                   'requisitos': desc[5],
+                   'beneficios': desc[6],
+                   'publicado': desc[7]}
+        
+        jobs_senac.append(d_senac)
+        
+    return json.dumps(jobs_senac)
+        
+         
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
