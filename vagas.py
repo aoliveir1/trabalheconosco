@@ -9,6 +9,7 @@ from splinter import Browser
 from splinter.driver.webdriver import BaseWebDriver, WebDriverElement
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
+import requests
 
 app = bottle.default_app()
 
