@@ -448,4 +448,23 @@ def stv_get_all_jobs():
         
     return json.dumps(jobs_stv)
 
+'''
+Anhanguera
+'''
+
+@get('/jobs_anhanguera')
+def anhanguera_get_all_jobs():
+    api = 'https://eb.vagas.com.br/pesquisa-vagas/kroton.json?c[]=Caxias+do+Sul&div[]=40464&div[]=60086&div[]=60081&div[]=60082&div[]=60084&div[]=63697&div[]=60085&div[]=60083&div[]=47132&div[]=60110&div[]=60111&div[]=60112&div[]=60113&div[]=60114&div[]=63698&page=1&page_size=135&q=caxias+do+sul'
+    response = requests.get(api)
+    vagas = json.loads(response.text)
+
+    jobs_anhanguera = []
+    for i in vagas['anuncios']:
+        if 'Anhanguera' in i['empresa']:
+            d = {'vaga':i['cargo'],
+                 'url': i['url']}
+            jobs_anhanguera.append(d)
+    return json.dumps(jobs_anhanguera)
+
+
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
