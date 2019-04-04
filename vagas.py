@@ -369,7 +369,7 @@ def senac_get_all_jobs():
             links.append(url+job['href'])
 
     jobs_senac = []
-    for link in get_links():
+    for link in links:
         req = urllib.request.Request(link, headers=headers)
         page = urllib.request.urlopen(req)
         soup = BeautifulSoup(page, 'html.parser')
