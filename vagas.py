@@ -16,6 +16,7 @@ app = bottle.default_app()
 '''
 UCS
 '''
+
 page_ucs = urllib.request.urlopen('https://sou.ucs.br/recursos_humanos/cadastro_curriculo/')
 soup_ucs = BeautifulSoup(page_ucs, 'html.parser')
 jobs_ucs = soup_ucs.find_all('li')
