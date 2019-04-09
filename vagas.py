@@ -73,7 +73,10 @@ def ucs_get_all_jobs():
 HG
 '''
 
-page = urllib.request.urlopen('https://www.hgcs.com.br/vagas_disponiveis.php')
+url = 'https://www.hgcs.com.br/vagas_disponiveis.php'
+headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linu…) Gecko/20100101 Firefox/65.0'.encode('utf-8')}
+req = urllib.request.Request(url, headers=headers)
+page = urllib.request.urlopen(req)
 soup = BeautifulSoup(page, 'html.parser')
 jobs = soup.find_all('div', {'class': 'div_vagas'})
 
