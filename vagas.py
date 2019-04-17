@@ -377,12 +377,12 @@ Senac
 @get('/jobs_senac')
 def senac_get_all_jobs():
     jobs_senac = []
-    print('senac 0')
     try:
-        print('senac 1')
+        print('senac 0')
         url = ' https://trabalheconosco.senacrs.com.br/vagas/em-processo-de-selecao'
         headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linu…) Gecko/20100101 Firefox/65.0'.encode('utf-8')}
         req = urllib.request.Request(url, headers=headers)
+        print('senac 1')
         page = urllib.request.urlopen(req)
         soup = BeautifulSoup(page, 'html.parser')
         jobs = soup.find('dl', {'class': 'vagas'})
