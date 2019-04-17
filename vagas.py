@@ -377,27 +377,25 @@ Senac
 @get('/jobs_senac')
 def senac_get_all_jobs():
     jobs_senac = []
+    print('senac 0')
     try:
+        print('senac 1')
         url = ' https://trabalheconosco.senacrs.com.br/vagas/em-processo-de-selecao'
         headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linu…) Gecko/20100101 Firefox/65.0'.encode('utf-8')}
         req = urllib.request.Request(url, headers=headers)
         page = urllib.request.urlopen(req)
         soup = BeautifulSoup(page, 'html.parser')
         jobs = soup.find('dl', {'class': 'vagas'})
-
         links = []
         if '<dt>Caxias do Sul</dt>' in str(jobs):
             pos_start = str(jobs).find('<dt>Caxias do Sul</dt>')
             pos_end = str(jobs).find('<dt>', pos_start+1)
             jobs = str(jobs)[pos_start:pos_end]
-
             soup = BeautifulSoup(str(jobs), 'html.parser')
             jobs = soup.find_all('a')
-
             url = 'https://trabalheconosco.senacrs.com.br'
             for job in jobs:
                 links.append(url+job['href'])
-
         for link in links:
             req = urllib.request.Request(link, headers=headers)
             page = urllib.request.urlopen(req)
@@ -422,11 +420,11 @@ def senac_get_all_jobs():
                        'requisitos': desc[5],
                        'beneficios': desc[6],
                        'publicado': desc[7]}
-
+            print('senac 2')
             jobs_senac.append(d_senac)
-
         return json.dumps(jobs_senac)
     except:
+        print('senac 3')
         return json.dumps(jobs_senac)
         
 '''
