@@ -378,11 +378,9 @@ Senac
 def senac_get_all_jobs():
     jobs_senac = []
     try:
-        print('senac 0')
         url = ' https://trabalheconosco.senacrs.com.br/vagas/em-processo-de-selecao'
         headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linu…) Gecko/20100101 Firefox/65.0'.encode('utf-8')}
         req = urllib.request.Request(url, headers=headers)
-        print('senac 1')
         page = urllib.request.urlopen(req)
         soup = BeautifulSoup(page, 'html.parser')
         jobs = soup.find('dl', {'class': 'vagas'})
@@ -412,7 +410,6 @@ def senac_get_all_jobs():
                 soup = BeautifulSoup(str(dado), 'html.parser')
                 span = soup.find('span')
                 desc.append(str(span.text).strip())
-
             d_senac = {'vaga': desc[0],
                        'unidade': desc[1],
                        'area': desc[3],
@@ -420,11 +417,9 @@ def senac_get_all_jobs():
                        'requisitos': desc[5],
                        'beneficios': desc[6],
                        'publicado': desc[7]}
-            print('senac 2')
             jobs_senac.append(d_senac)
         return json.dumps(jobs_senac)
     except:
-        print('senac 3')
         return json.dumps(jobs_senac)
         
 '''
