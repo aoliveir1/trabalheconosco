@@ -177,21 +177,20 @@ def flexxo_get_all_jobs():
 '''
 Randon
 '''
+def soup_randon():
+    soup = get_soup(urls['randon'])
+    return soup.find_all('tr', {'data-workplace': 'Caxias do Sul'})
 
 @get('/jobs_randon')
 def randon_get_all_jobs():
     v_randon = []
     try:
-        url = 'https://randon.gupy.io'
-        headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linu…) Gecko/20100101 Firefox/65.0'.encode('utf-8')}
-        req = urllib.request.Request(url, headers=headers)
-        page = urllib.request.urlopen(req)
-        soup = BeautifulSoup(page, 'html.parser')
+        soup = soup_randon()
         jobs_randon1 = soup.find_all('tr', {'data-workplace': 'Caxias do Sul'})
         for job in jobs_randon1:
             soup = BeautifulSoup(str(job), 'html.parser')
             titulo = soup.find('span', {'class': 'title'})
-            url_vaga = url+job.a['href']
+            url_vaga = urls['randon'] + job.a['href']
             d_randon = {'vaga': str(titulo.text).strip(), 'link': url_vaga}
             v_randon.append(d_randon)
         return json.dumps(v_randon)
