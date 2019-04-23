@@ -1,16 +1,17 @@
 import os
 import json
-import time
 from bs4 import BeautifulSoup
 import urllib.request
 import bottle
 from bottle import get, response, run
-from splinter import Browser
 import requests
+
+from pprint import pprint
 
 app = bottle.default_app()
 
 urls = {
+    'flexxo': 'http://www.flexxo.com.br/Caxias+do+Sul/oportunidades/',
     'hg': 'https://www.hgcs.com.br/vagas_disponiveis.php',
     'ucs': 'https://sou.ucs.br/recursos_humanos/cadastro_curriculo/'
 }
@@ -151,90 +152,23 @@ def hg_get_all_jobs():
         return json.dumps(v_hg)
 
 '''
-FTEC
-'''
-def ftec_get_names(soup):
-    names = soup.find_all('div', attrs={'class': 'listaVagasTitulo'})
-    list_names = []
-    for name in names:
-        list_names.append(name.text.strip())
-    return list_names
-
-def ftec_get_date_published(soup):
-    date_published = soup.find_all('div', attrs={'class': 'listaVagasData'})
-    list_dates = []
-    for dt in date_published:
-        dt = str(dt).strip()
-        pos_reference = dt.find('Data de Publicação:')
-        pos_start = dt.find('bolder;">', pos_reference)
-        list_dates.append(dt[pos_start + 9:pos_start + 19])
-    return list_dates
-
-def ftec_get_place(soup):
-    place = soup.find_all('div', attrs={'class': 'listaVagasDescritivos'})
-    list_places = []
-    for i, l in enumerate(place):
-        if i > 0:
-            l = str(l)
-            pos_reference = l.find('Localidade:')
-            pos_start = l.find('"ng-binding">', pos_reference)
-            pos_end = l.find('</span>', pos_start)
-            list_places.append(l[pos_start + 13:pos_end])
-    return list_places
-
-def ftec_get_description(soup):
-    description = soup.find_all('div', attrs={'class': 'listaVagasDescritivos'})
-    list_desc = []
-    for i, desc in enumerate(description):
-        if i > 0:
-            desc = str(desc)
-            pos_reference = len('controller.validaQuebradeLinha(vaga.Descricao)">')
-            pos_start = desc.find('<br/>', pos_reference)
-            pos_end = desc.find('</div>', pos_start)
-            desc = desc[pos_start:pos_end]
-            list_desc.append(desc.replace('</p>', '').replace('<br/>', '').replace('\n', ''))
-    return list_desc
-
-@get('/jobs_uniftec')
-def ftec_get_all_jobs():
-    response.headers['Content-Type'] = 'application/json'
-    response.headers['Cache-Control'] = 'no-cache'
-
-    browser = Browser('chrome', headless = True)
-    browser.visit('http://educacional.ftec.com.br:8080/RM/Rhu-BancoTalentos/#/RM/Rhu-BancoTalentos/painelVagas/lista')
-    
-    jobs = [{'nome': 'titulo', 'data': 'data', 'local': 'local', 'descricao': 'desc'}]
-    time.sleep(1)
-    if browser.is_element_present_by_text('Data de Publicação: ', wait_time=True):
-        soup = BeautifulSoup(browser.html, 'html.parser')
-        for titulo, data, local, desc in zip(ftec_get_names(soup), ftec_get_date_published(soup), ftec_get_place(soup), ftec_get_description(soup)):
-            d = {'nome': titulo, 'data': data, 'local': local, 'descricao': desc}
-            jobs.append(d)
-            
-    browser.quit()
-
-    return json.dumps(jobs)
-
-'''
 Flexxo
 '''
+def soup_flexxo():
+    soup = get_soup(urls['flexxo'])
+    return (soup.find_all('div', {'class': 'oportunidade rounded'}),
+            soup.find_all('div', {'class': 'oportunidade rounded last'}))
+
 @get('/jobs_flexxo')
 def flexxo_get_all_jobs():
     jobs_flexxo = []
+    soup = soup_flexxo()
     try:
-        url = 'http://www.flexxo.com.br/Caxias+do+Sul/oportunidades/'
-        headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linu…) Gecko/20100101 Firefox/65.0'.encode('utf-8')}
-        req = urllib.request.Request(url, headers=headers)
-        page = urllib.request.urlopen(req)
-        soup = BeautifulSoup(page, 'html.parser')
-        jobs_flexxo1 = soup.find_all('div', {'class': 'oportunidade rounded'})
-        jobs_flexxo2 = soup.find_all('div', {'class': 'oportunidade rounded last'})
-        for job in zip(jobs_flexxo1, jobs_flexxo2):
+        for job in zip(soup[0], soup[1]):
             soup = BeautifulSoup(str(job), 'html.parser')
             links = soup.find_all('a')
             for link in links:
                 jobs_flexxo.append({'vaga': link.text.strip(), 'link': link['href']})
-
         return json.dumps(jobs_flexxo)
     except:
         print('erro em flexxo')
