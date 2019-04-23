@@ -6,25 +6,32 @@ import urllib.request
 import bottle
 from bottle import get, response, run
 from splinter import Browser
-from splinter.driver.webdriver import BaseWebDriver, WebDriverElement
-from selenium.webdriver import Chrome
-from selenium.webdriver.chrome.options import Options
 import requests
 
 app = bottle.default_app()
 
+urls = {
+    'hg': 'https://www.hgcs.com.br/vagas_disponiveis.php',
+    'ucs': 'https://sou.ucs.br/recursos_humanos/cadastro_curriculo/'
+}
+headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linu…) Gecko/20100101 Firefox/65.0'.encode('utf-8')}
+
+def get_soup(url):
+    req = urllib.request.Request(url, headers=headers)
+    page = urllib.request.urlopen(req)
+    return BeautifulSoup(page, 'html.parser')
+
 '''
 UCS
 '''
-
-page_ucs = urllib.request.urlopen('https://sou.ucs.br/recursos_humanos/cadastro_curriculo/')
-soup_ucs = BeautifulSoup(page_ucs, 'html.parser')
-jobs_ucs = soup_ucs.find_all('li')
+def ucs_soup():
+    soup = get_soup(urls['ucs'])
+    return soup.find_all('li')
 
 def ucs_get_job(job_ucs):
     pos_start = job_ucs.find('"/>')
-    pos_end = job_ucs.find('<',pos_start)
-    job_ucs = job_ucs[pos_start+3:pos_end].strip()
+    pos_end = job_ucs.find('<', pos_start)
+    job_ucs = job_ucs[pos_start + 3:pos_end].strip()
     return job_ucs
 
 def ucs_get_formation(job_ucs):
@@ -32,7 +39,7 @@ def ucs_get_formation(job_ucs):
     if pos_reference > 0:
         pos_start = job_ucs.find('">', pos_reference)
         pos_end = job_ucs.find('</div>', pos_start)
-        return job_ucs[pos_start+2:pos_end].strip()
+        return job_ucs[pos_start + 2:pos_end].strip()
     else:
         return 'Não informado.'
 
@@ -40,13 +47,13 @@ def ucs_get_locale(job_ucs):
     pos_reference = job_ucs.find('<label>Localidade:</label>')
     pos_start = job_ucs.find('">', pos_reference)
     pos_end = job_ucs.find('</div>', pos_start)
-    return job_ucs[pos_start+2:pos_end].strip()
+    return job_ucs[pos_start + 2:pos_end].strip()
 
 def ucs_get_turn(job_ucs):
     pos_reference = job_ucs.find('<label>Turno:</label>')
     pos_start = job_ucs.find('">', pos_reference)
     pos_end = job_ucs.find('</div>', pos_start)
-    return job_ucs[pos_start+2:pos_end].strip().replace('\n', '').replace(' ', '').replace(',', ', ')
+    return job_ucs[pos_start + 2:pos_end].strip().replace('\n', '').replace(' ', '').replace(',', ', ')
 
 def ucs_get_description(job_ucs):
     pos_ini = job_ucs.find('Descrição:')
@@ -56,7 +63,8 @@ def ucs_get_description(job_ucs):
 
 @get('/jobs_ucs')
 def ucs_get_all_jobs():
-    v_ucs=[]
+    jobs_ucs = ucs_soup()
+    v_ucs = []
     try:
         for job_ucs in jobs_ucs:
             job_ucs = str(job_ucs)
@@ -66,7 +74,6 @@ def ucs_get_all_jobs():
                      'turno': ucs_get_turn(job_ucs),
                      'descricao': ucs_get_description(job_ucs)}
             v_ucs.append(d_ucs)
-
         return json.dumps(v_ucs)
     except:
         print('erro em ucs')
@@ -75,25 +82,21 @@ def ucs_get_all_jobs():
 '''
 HG
 '''
-
-url = 'https://www.hgcs.com.br/vagas_disponiveis.php'
-headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linu…) Gecko/20100101 Firefox/65.0'.encode('utf-8')}
-req = urllib.request.Request(url, headers=headers)
-page = urllib.request.urlopen(req)
-soup = BeautifulSoup(page, 'html.parser')
-jobs = soup.find_all('div', {'class': 'div_vagas'})
+def hg_soup():
+    soup = get_soup(urls['hg'])
+    return soup.find_all('div', {'class': 'div_vagas'})
 
 def hg_get_job(job):
     pos_start = job.find('titulo_vagas')
-    pos_end = job.find('<',pos_start)
-    job = job[pos_start+15:pos_end].strip().capitalize()
+    pos_end = job.find('<', pos_start)
+    job = job[pos_start + 15:pos_end].strip().capitalize()
     return job
 
 def hg_get_sector(job):
     pos_start = job.find('Setor:')
     if pos_start < 0:
         return 'Não informado.'
-    pos_end = job.find('<',pos_start)
+    pos_end = job.find('<', pos_start)
     sector = job[pos_start + 6:pos_end].strip()
     return sector
 
@@ -102,7 +105,7 @@ def hg_get_working_hours(job):
     if pos_start < 0:
         return 'Não informado.'
     pos_end = job.find('<', pos_start)
-    wh = job[pos_start+14:pos_end].strip()
+    wh = job[pos_start + 14:pos_end].strip()
     return wh
 
 def hg_get_schedule(job):
@@ -110,14 +113,14 @@ def hg_get_schedule(job):
     if pos_start < 0:
         return 'Não informado.'
     pos_end = job.find('<', pos_start)
-    schedule = job[pos_start+20:pos_end].strip()
+    schedule = job[pos_start + 20:pos_end].strip()
     return schedule
 
 def hg_get_contract(job):
     pos_start = job.find('Contratação:')
     if pos_start < 0:
         return 'Não informado'
-    pos_end = job.find('<',pos_start)
+    pos_end = job.find('<', pos_start)
     contract = job[pos_start + 12:pos_end].strip()
     return contract
 
@@ -126,22 +129,22 @@ def hg_get_requirements(job):
     if pos_start < 0:
         return 'Não informado.'
     pos_end = job.find('<', pos_start)
-    return job[pos_start+10:pos_end].strip()
+    return job[pos_start + 10:pos_end].strip()
 
 @get('/jobs_hg')
 def hg_get_all_jobs():
-    v_hg=[]
+    jobs_hg = hg_soup()
+    v_hg = []
     try:
-        for job in jobs:
+        for job in jobs_hg:
             job = str(job)
             d_hg = {'vaga': hg_get_job(job),
-                 'setor': hg_get_sector(job),
-                 'carga horaria': hg_get_working_hours(job),
-                 'horario': hg_get_schedule(job),
-                 'contrato': hg_get_contract(job),
-                 'requisito': hg_get_requirements(job)}
+                    'setor': hg_get_sector(job),
+                    'carga horaria': hg_get_working_hours(job),
+                    'horario': hg_get_schedule(job),
+                    'contrato': hg_get_contract(job),
+                    'requisito': hg_get_requirements(job)}
             v_hg.append(d_hg)
-
         return json.dumps(v_hg)
     except:
         print('erro em hg')
@@ -150,7 +153,6 @@ def hg_get_all_jobs():
 '''
 FTEC
 '''
-
 def ftec_get_names(soup):
     names = soup.find_all('div', attrs={'class': 'listaVagasTitulo'})
     list_names = []
