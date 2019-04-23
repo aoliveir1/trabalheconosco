@@ -185,8 +185,7 @@ def soup_randon():
 def randon_get_all_jobs():
     v_randon = []
     try:
-        soup = soup_randon()
-        jobs_randon1 = soup.find_all('tr', {'data-workplace': 'Caxias do Sul'})
+        jobs_randon1 = soup_randon()
         for job in jobs_randon1:
             soup = BeautifulSoup(str(job), 'html.parser')
             titulo = soup.find('span', {'class': 'title'})
