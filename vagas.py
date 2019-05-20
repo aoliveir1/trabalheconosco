@@ -96,7 +96,7 @@ def hg_get_job(job):
 def hg_get_description(job):
     soup = BeautifulSoup(str(job), 'html.parser')
     job = soup.find('p')
-    return job
+    return str(job)
 
 @get('/jobs_hg')
 def hg_get_all_jobs():
