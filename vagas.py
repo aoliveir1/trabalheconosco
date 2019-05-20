@@ -12,7 +12,7 @@ app = bottle.default_app()
 
 urls = {
     'flexxo': 'http://www.flexxo.com.br/Caxias+do+Sul/oportunidades/',
-    'hg': 'https://www.hgcs.com.br/vagas_disponiveis.php',
+    'hg': 'https://www.hgcs.com.br/trabalhe_conosco.php',
     'randon': 'https://randon.gupy.io',
     'ucs': 'https://sou.ucs.br/recursos_humanos/cadastro_curriculo/'}
 headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linu…) Gecko/20100101 Firefox/65.0'.encode('utf-8')}
@@ -98,6 +98,7 @@ def hg_get_description(job):
     job = soup.find('p')
     return job
 
+@get('/jobs_hg')
 def hg_get_all_jobs():
     jobs_hg = hg_soup()
     v_hg = []
