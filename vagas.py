@@ -85,54 +85,19 @@ HG
 '''
 def hg_soup():
     soup = get_soup(urls['hg'])
-    return soup.find_all('div', {'class': 'div_vagas'})
+    return soup.find_all('div', {'class': 'list-vagas'})
 
 def hg_get_job(job):
-    pos_start = job.find('titulo_vagas')
-    pos_end = job.find('<', pos_start)
-    job = job[pos_start + 15:pos_end].strip().capitalize()
+    soup = BeautifulSoup(str(job), 'html.parser')
+    job = soup.find('div', {'class': 'titulo_vagas'})
+    job = str(job.text).strip()
+    return job.title()
+
+def hg_get_description(job):
+    soup = BeautifulSoup(str(job), 'html.parser')
+    job = soup.find('p')
     return job
 
-def hg_get_sector(job):
-    pos_start = job.find('Setor:')
-    if pos_start < 0:
-        return 'Não informado.'
-    pos_end = job.find('<', pos_start)
-    sector = job[pos_start + 6:pos_end].strip()
-    return sector
-
-def hg_get_working_hours(job):
-    pos_start = job.find('Carga')
-    if pos_start < 0:
-        return 'Não informado.'
-    pos_end = job.find('<', pos_start)
-    wh = job[pos_start + 14:pos_end].strip()
-    return wh
-
-def hg_get_schedule(job):
-    pos_start = job.find('Horário de Trabalho:')
-    if pos_start < 0:
-        return 'Não informado.'
-    pos_end = job.find('<', pos_start)
-    schedule = job[pos_start + 20:pos_end].strip()
-    return schedule
-
-def hg_get_contract(job):
-    pos_start = job.find('Contratação:')
-    if pos_start < 0:
-        return 'Não informado'
-    pos_end = job.find('<', pos_start)
-    contract = job[pos_start + 12:pos_end].strip()
-    return contract
-
-def hg_get_requirements(job):
-    pos_start = job.find('equisito')
-    if pos_start < 0:
-        return 'Não informado.'
-    pos_end = job.find('<', pos_start)
-    return job[pos_start + 10:pos_end].strip()
-
-@get('/jobs_hg')
 def hg_get_all_jobs():
     jobs_hg = hg_soup()
     v_hg = []
@@ -140,11 +105,7 @@ def hg_get_all_jobs():
         for job in jobs_hg:
             job = str(job)
             d_hg = {'vaga': hg_get_job(job),
-                    'setor': hg_get_sector(job),
-                    'carga horaria': hg_get_working_hours(job),
-                    'horario': hg_get_schedule(job),
-                    'contrato': hg_get_contract(job),
-                    'requisito': hg_get_requirements(job)}
+                    'descricao': hg_get_description(job)}
             v_hg.append(d_hg)
         return json.dumps(v_hg)
     except:
