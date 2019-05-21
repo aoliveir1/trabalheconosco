@@ -101,7 +101,12 @@ def hg_get_description(job):
     desc = desc.replace('</p>', '').replace('<p>', '').replace('</span>', '').replace('<span style="color:rgb(34, 34, 34); font-family:arial,helvetica,sans-serif; font-size:small">', '')
     desc = desc.replace('<br/>','\n').replace('<strong>', '').replace('</strong>', '')
     desc = desc.split('\n')
-    return desc
+    descs = []
+    for d in desc:
+        x = d.split(':')
+        x = {x[0].strip(): x[1].strip()}
+        descs.append(x)
+    return descs
 
 @get('/jobs_hg')
 def hg_get_all_jobs():
