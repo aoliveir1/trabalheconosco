@@ -95,12 +95,13 @@ def hg_get_job(job):
 
 def hg_get_description(job):
     soup = BeautifulSoup(str(job), 'html.parser')
-    job = soup.find('p')
-    job = str(job)
-    job = job.replace('<p style="text-align: justify;">', '').replace('<p style="text-align:justify">', '')
-    job = job.replace('</p>', '').replace('<p>', '').replace('</span>', '').replace('<span style="color:rgb(34, 34, 34); font-family:arial,helvetica,sans-serif; font-size:small">', '')
-    job = job.replace('<br/>','\n').replace('<strong>', '').replace('</strong>', '')
-    return str(job)
+    desc = soup.find('p')
+    desc = str(desc)
+    desc = desc.replace('<p style="text-align: justify;">', '').replace('<p style="text-align:justify">', '')
+    desc = desc.replace('</p>', '').replace('<p>', '').replace('</span>', '').replace('<span style="color:rgb(34, 34, 34); font-family:arial,helvetica,sans-serif; font-size:small">', '')
+    desc = desc.replace('<br/>','\n').replace('<strong>', '').replace('</strong>', '')
+    desc = desc.split('\n')
+    return desc
 
 @get('/jobs_hg')
 def hg_get_all_jobs():
