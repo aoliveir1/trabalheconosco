@@ -98,9 +98,9 @@ def hg_get_description(job):
     job = soup.find('p')
     job = str(job)
     job = job.replace('<p style="text-align: justify;">', '').replace('<p style="text-align:justify">', '')
-    job = job.replace('</p>', '').replace('<p>', '')
+    job = job.replace('</p>', '').replace('<p>', '').replace('</span>', '').replace('<span style="color:rgb(34, 34, 34); font-family:arial,helvetica,sans-serif; font-size:small">', '')
     job = job.replace('<br/>','\n').replace('<strong>', '').replace('</strong>', '')
-    return job
+    return str(job)
 
 @get('/jobs_hg')
 def hg_get_all_jobs():
