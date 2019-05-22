@@ -215,31 +215,7 @@ def randon_get_all_jobs():
     except:
         print('erro em randon')
         return json.dumps(v_randon)    
-
-
-'''
-Randon
-
-def soup_randon():
-    soup = get_soup(urls['randon'])
-    return soup.find_all('tr', {'data-workplace': 'Caxias do Sul'})
-
-@get('/jobs_randon')
-def randon_get_all_jobs():
-    v_randon = []
-    try:
-        jobs_randon1 = soup_randon()
-        for job in jobs_randon1:
-            soup = BeautifulSoup(str(job), 'html.parser')
-            titulo = soup.find('span', {'class': 'title'})
-            url_vaga = urls['randon'] + job.a['href']
-            d_randon = {'vaga': str(titulo.text).strip(), 'link': url_vaga}
-            v_randon.append(d_randon)
-        return json.dumps(v_randon)
-    except:
-        print('erro em randon')
-        return json.dumps(v_randon)
-'''        
+    
 '''
 Menon
 '''
