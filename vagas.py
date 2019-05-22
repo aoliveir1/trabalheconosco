@@ -145,10 +145,81 @@ def flexxo_get_all_jobs():
     except:
         print('erro em flexxo')
         return json.dumps(jobs_flexxo)
+    
 
+    
 '''
 Randon
 '''
+def soup_randon():
+    soup = get_soup(urls['randon'])
+    return soup.find_all('tr', {'data-workplace': 'Caxias do Sul'})
+
+def randon_job(soup):
+    vaga = soup.find('span', {'class': 'title'})
+    return str(vaga.text).strip()
+
+def randon_url(job):
+    return urls['randon'] + job.a['href']
+
+def randon_description(job):
+    url = randon_url(job)
+    soup = get_soup(url)
+    description = soup.find('div', {'class': 'description'})
+    soup = BeautifulSoup(str(description), 'html.parser')
+
+    d = str(soup.text)
+    p1 = d.find('Descrição da vaga')
+    p2 = d.find('AS EMPRESAS RANDON')
+    d = d[p1:p2]
+    d = d.strip()
+    d = d.replace('\n', ' ').replace('\t', ' ').replace('\r', ' ').replace('        ', ' ')
+
+    d1 = d.find('Descrição da vaga')
+    d2 = d.find('Responsabilidades e atribuições')
+    descricao = d[d1+len('Descrição da vaga'):d2]
+
+    a1 = d.find('Responsabilidades e atribuições')
+    a2 = d.find('Requisitos e qualificações')
+    responsabilidades = d[a1+len('Responsabilidades e atribuições'):a2]
+
+    q1 = d.find('Requisitos e qualificações')
+    q2 = d.find('Informações adicionais')
+    requisitos = d[q1+len('Requisitos e qualificações'):q2]
+
+    i1 = d.find('Informações adicionais')
+    informacoes = d[i1+len('Informações adicionais'):]
+
+    description = {
+        'descricao': descricao.strip(),
+        'responsabilidades': responsabilidades.strip(),
+        'requisitos': requisitos.strip(),
+        'informacoes': informacoes.strip()}
+
+    return description
+
+@get('/jobs_randon')
+def randon_get_all_jobs():
+    v_randon = []
+    try:
+        for job in soup_randon():
+            soup = BeautifulSoup(str(job), 'html.parser')
+
+            vaga = randon_job(soup)
+            url = randon_url(job)
+            description = randon_description(job)
+
+            d_randon = {'vaga': vaga, 'link': url, 'descricao': description}
+            v_randon.append(d_randon)
+        return json.dumps(v_randon)
+    except:
+        print('erro em randon')
+        return json.dumps(v_randon)    
+
+
+'''
+Randon
+
 def soup_randon():
     soup = get_soup(urls['randon'])
     return soup.find_all('tr', {'data-workplace': 'Caxias do Sul'})
@@ -168,7 +239,7 @@ def randon_get_all_jobs():
     except:
         print('erro em randon')
         return json.dumps(v_randon)
-        
+'''        
 '''
 Menon
 '''
