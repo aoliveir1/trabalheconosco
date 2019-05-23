@@ -131,6 +131,17 @@ def soup_flexxo():
     return (soup.find_all('div', {'class': 'oportunidade rounded'}),
             soup.find_all('div', {'class': 'oportunidade rounded last'}))
 
+def flexxo_job(link):
+    return link.text.strip()
+
+def flexxo_link(link):
+    return link['href']
+
+def flexxo_description(link):
+    url = 'http://www.flexxo.com.br/' + link['href']
+    soup = get_soup(url)
+    return soup.find('div', {'class': 'oportunidade detalhes'}).text
+
 @get('/jobs_flexxo')
 def flexxo_get_all_jobs():
     jobs_flexxo = []
@@ -140,12 +151,14 @@ def flexxo_get_all_jobs():
             soup = BeautifulSoup(str(job), 'html.parser')
             links = soup.find_all('a')
             for link in links:
-                jobs_flexxo.append({'vaga': link.text.strip(), 'link': link['href']})
+                vaga = flexxo_job(link)
+                descricao = flexxo_description(link)
+                link = flexxo_link(link)
+                jobs_flexxo.append({'vaga': vaga, 'descricao': descricao, 'link': link})
         return json.dumps(jobs_flexxo)
     except:
         print('erro em flexxo')
-        return json.dumps(jobs_flexxo)
-    
+    return json.dumps(jobs_flexxo)
 
     
 '''
