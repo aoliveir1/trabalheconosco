@@ -140,7 +140,8 @@ def flexxo_link(link):
 def flexxo_description(link):
     url = 'http://www.flexxo.com.br/' + link['href']
     soup = get_soup(url)
-    return soup.find('div', {'class': 'oportunidade detalhes'}).text
+    return soup.find('div', {'class': 'texto'}).text
+
 
 @get('/jobs_flexxo')
 def flexxo_get_all_jobs():
