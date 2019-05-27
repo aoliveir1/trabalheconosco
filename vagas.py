@@ -465,27 +465,43 @@ def anhanguera_get_all_jobs():
 '''
 FSG
 '''
-@get('/jobs_fsg')
 def soup_fsg():
     soup = get_soup(urls['fsg'])
-    vagas = soup.find_all('div', {'class': 'box-single'})
+    return soup.find_all('div', {'class': 'box-single'})
+
+def fsg_job(job):
+    return str(job.find('h3').text).title().strip()
+
+def fsg_publish_date(job):
+    return str(job.find('div', {'class': 'data'}).text).strip()
+
+def fsg_link(job):
+    a = job.find('a')
+    return 'http://centraldecarreiras.fsg.br'+a['href']
+
+def fsg_description(link):
+    description = get_soup(link)
+    description = description.find_all('div', {'class': 'sessao'})
+    d = ''
+    for desc in description:
+        desc = str(desc.text).replace('\n', ' ').replace('\t', ' ').replace('\r', ' ').replace('  ', ' ')
+        d = d + desc
+    return d
+
+@get('/jobs_fsg')
+def fsg_get_all_jobs():
+    soup = soup_fsg()
     jobs_fsg = []
-    for vaga in vagas:
-        vaga = BeautifulSoup(str(vaga), 'html.parser')
+    for job in soup:
+        job = BeautifulSoup(str(job), 'html.parser')
         try:
-            v = vaga.find('h3').text
-            p = vaga.find('div', {'class': 'data'}).text
-            a = vaga.find('a')
-            url = 'http://centraldecarreiras.fsg.br'+a['href']
-            soup = get_soup(url)
-            description = soup.find_all('div', {'class': 'sessao'})
-            d = ''
-            for desc in description:
-                desc = str(desc.text).replace('\n', ' ').replace('\t', ' ').replace('\r', ' ').replace('  ', ' ')
-                d = d + desc
-            jobs_fsg.append({'vaga': v.title().strip(), 'data': p.strip(), 'descricao': d, 'link': a['href']})
+            title = fsg_job(job)
+            date = fsg_publish_date(job)
+            link = fsg_link(job)
+            description = fsg_description(link)
+            jobs_fsg.append({'vaga': title, 'data': date, 'descricao': description, 'link': link})
         except:
             pass
-    return json.dumps(jobs_fsg)   
+    return json.dumps(jobs_fsg) 
 
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
