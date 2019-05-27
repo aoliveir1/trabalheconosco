@@ -466,7 +466,7 @@ def anhanguera_get_all_jobs():
 FSG
 '''
 @get('/jobs_fsg')
-def fsg_get_all_jobs():
+def soup_fsg():
     soup = get_soup(urls['fsg'])
     vagas = soup.find_all('div', {'class': 'box-single'})
     jobs_fsg = []
@@ -474,11 +474,18 @@ def fsg_get_all_jobs():
         vaga = BeautifulSoup(str(vaga), 'html.parser')
         try:
             v = vaga.find('h3').text
-            d = vaga.find('div', {'class': 'data'}).text
+            p = vaga.find('div', {'class': 'data'}).text
             a = vaga.find('a')
-            jobs_fsg.append({'vaga': v.strip(), 'data': d.strip(), 'link': a['href']})
+            url = 'http://centraldecarreiras.fsg.br'+a['href']
+            soup = get_soup(url)
+            description = soup.find_all('div', {'class': 'sessao'})
+            d = ''
+            for desc in description:
+                desc = str(desc.text).replace('\n', ' ').replace('\t', ' ').replace('\r', ' ').replace('  ', ' ')
+                d = d + desc
+            jobs_fsg.append({'vaga': v.title().strip(), 'data': p.strip(), 'descricao': d, 'link': a['href']})
         except:
             pass
-    return json.dumps(jobs_fsg)    
+    return json.dumps(jobs_fsg)   
 
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
