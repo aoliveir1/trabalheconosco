@@ -12,6 +12,7 @@ app = bottle.default_app()
 
 urls = {
     'flexxo': 'http://www.flexxo.com.br/Caxias+do+Sul/oportunidades/',
+    'fsg': 'http://centraldecarreiras.fsg.br/candidatos',
     'hg': 'https://www.hgcs.com.br/trabalhe_conosco.php',
     'randon': 'https://randon.gupy.io',
     'ucs': 'https://sou.ucs.br/recursos_humanos/cadastro_curriculo/'}
@@ -461,5 +462,23 @@ def anhanguera_get_all_jobs():
     except:
         return json.dumps(jobs_anhanguera)
 
+'''
+FSG
+'''
+@get('/jobs_fsg')
+def fsg_get_all_jobs():
+    soup = get_soup(urls['fsg'])
+    vagas = soup.find_all('div', {'class': 'box-single'})
+    jobs_fsg = []
+    for vaga in vagas:
+        vaga = BeautifulSoup(str(vaga), 'html.parser')
+        try:
+            v = vaga.find('h3').text
+            d = vaga.find('div', {'class': 'data'}).text
+            a = vaga.find('a')
+            jobs_fsg.append({'vaga': v.strip(), 'data': d.strip(), 'link': a['href']})
+        except:
+            pass
+    return json.dumps(jobs_fsg)    
 
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
