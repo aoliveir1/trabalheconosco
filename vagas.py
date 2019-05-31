@@ -445,7 +445,6 @@ def stv_get_all_jobs():
 '''
 Anhanguera
 '''
-
 @get('/jobs_anhanguera')
 def anhanguera_get_all_jobs():
     jobs_anhanguera = []
@@ -455,7 +454,7 @@ def anhanguera_get_all_jobs():
         vagas = json.loads(response.text)
         for i in vagas['anuncios']:
             if 'Anhanguera' in i['empresa']:
-                d = {'vaga':i['cargo'],
+                d = {'vaga':i['cargo'].title(),
                      'url': i['url']}
                 jobs_anhanguera.append(d)
         return json.dumps(jobs_anhanguera)
