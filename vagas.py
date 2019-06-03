@@ -154,9 +154,18 @@ def flexxo_get_all_jobs():
             soup = BeautifulSoup(str(job), 'html.parser')
             links = soup.find_all('a')
             for link in links:
-                vaga = flexxo_job(link)
-                descricao = flexxo_description(link)
-                link = flexxo_link(link)
+                try:
+                    vaga = flexxo_job(link)
+                except:
+                    vaga = None
+                try:
+                    descricao = flexxo_description(link)
+                except:
+                    descricao = None
+                try:
+                    link = flexxo_link(link)
+                except:
+                    link = None
                 jobs_flexxo.append({'vaga': vaga, 'descricao': descricao, 'link': link})
         return json.dumps(jobs_flexxo)
     except:
