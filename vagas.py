@@ -166,7 +166,7 @@ def flexxo_get_all_jobs():
                     link = flexxo_link(link)
                 except:
                     link = None
-                if (vaga is not None) & (descricao is not None) & (link is not None):
+                if (vaga is not None) or (descricao is not None) or (link is not None):
                     jobs_flexxo.append({'vaga': vaga, 'descricao': descricao, 'link': link})
         return json.dumps(jobs_flexxo)
     except:
