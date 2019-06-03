@@ -92,7 +92,7 @@ def hg_get_job(job):
     soup = BeautifulSoup(str(job), 'html.parser')
     job = soup.find('div', {'class': 'titulo_vagas'})
     job = str(job.text).strip().title()
-    job = ''.join([c for c in job if c.isalnum()])
+    job = ''.join([c for c in job if c.isalnum() or ' '])
     return job
 
 def hg_get_description(job):
