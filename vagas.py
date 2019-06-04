@@ -544,4 +544,36 @@ def soup_ilumisol_job():
     return json.dumps(jobs_ilumisol)
 
 
+'''
+Sperinde
+'''
+
+
+def soup_sperinde():
+    soup = get_soup(urls['sperinde'])
+    return soup.find_all('div', {'class': 'panel panel-default'})
+
+
+@get('/jobs_sperinde')
+def sperinde_jobs():
+    jobs_sperinde = []
+    for job in soup_sperinde():
+        soup = BeautifulSoup(str(job), 'html.parser')
+        job = soup.h4.text
+        job = str(job).strip()
+        soup = BeautifulSoup(str(soup), 'html.parser')
+        desc = soup.find('div', {'class': 'panel-body'})
+        soup = BeautifulSoup(str(desc), 'html.parser')
+        b = soup.find_all('b')
+        texto = (soup.text).replace(b[0].text, ' ').replace(b[1].text, ' ')
+        texto = texto.split('\n')
+        l = []
+        for t in texto:
+            t = t.strip()
+            if len(t) > 0:
+                l.append(t)
+        jobs_sperinde.append({'vaga': job, b[0].text: l[0], b[1].text: l[1]})
+    return json.dumps(jobs_sperinde)
+
+
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
