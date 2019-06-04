@@ -16,6 +16,7 @@ urls = {
     'hg': 'https://www.hgcs.com.br/trabalhe_conosco.php',
     'ilumisol': 'https://www.ilumisolenergiasolar.com.br/trabalhe-conosco/',
     'randon': 'https://randon.gupy.io',
+    'sperinde': 'https://www.sperinde.com/trabalhe/',
     'ucs': 'https://sou.ucs.br/recursos_humanos/cadastro_curriculo/'}
 headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linu…) Gecko/20100101 Firefox/65.0'.encode('utf-8')}
 
