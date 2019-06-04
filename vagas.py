@@ -17,6 +17,7 @@ urls = {
     'ilumisol': 'https://www.ilumisolenergiasolar.com.br/trabalhe-conosco/',
     'randon': 'https://randon.gupy.io',
     'sperinde': 'https://www.sperinde.com/trabalhe/',
+    'twtransportes': 'https://www.twtransportes.com.br/trabalhe/#',
     'ucs': 'https://sou.ucs.br/recursos_humanos/cadastro_curriculo/'}
 headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linu…) Gecko/20100101 Firefox/65.0'.encode('utf-8')}
 
@@ -575,6 +576,45 @@ def sperinde_jobs():
                 l.append(t)
         jobs_sperinde.append({'Vaga': job, str(b[0].text).replace(':', ''): l[0], str(b[1].text).replace(':', ''): l[1]})
     return json.dumps(jobs_sperinde)
+
+
+'''
+TW Transportes
+'''
+
+
+@get('/jobs_tw')
+def soup_tw():
+    soup = get_soup(urls['twtransportes'])
+    corp = soup.find_all('tr', {'class': 'corp'})
+    desc = soup.find_all('tr', {'class': 'desc'})
+
+    jobs = []
+    for i, c in enumerate(corp):
+        c = str(c)
+        if 'CAXIAS DO SUL/RS' in c:
+            job = BeautifulSoup(c, 'html.parser')
+            job = job.find('td')
+            jobs.append((i, job.text))
+
+    items_dict = []
+    jobs_tw = []
+    for i, x in enumerate(range(len(jobs))):
+        x = desc[jobs[i][0]]
+        x = BeautifulSoup(str(x), 'html.parser')
+        d = x.find_all('p')
+        s = x.find_all('strong')
+        for s, p in zip(s, d):
+            chave = s.text
+            valor = str(p.text).replace(chave, '').replace('\r\n', ' ').strip()
+            items_dict.append((chave, valor))
+        dict = {}
+        dict['Vaga:']= jobs[0][1]
+        for i in items_dict:
+            dict[i[0]] = i[1]
+        jobs_tw.append(dict)
+        
+    return json.dumps(jobs_tw)
 
 
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
