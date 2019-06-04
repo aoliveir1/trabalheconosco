@@ -573,7 +573,7 @@ def sperinde_jobs():
             t = t.strip()
             if len(t) > 0:
                 l.append(t)
-        jobs_sperinde.append({'vaga': job, b[0].text: l[0], b[1].text: l[1]})
+        jobs_sperinde.append({'Vaga': job, b[0].text: l[0], b[1].text: l[1]})
     return json.dumps(jobs_sperinde)
 
 
