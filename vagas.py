@@ -14,6 +14,7 @@ urls = {
     'flexxo': 'http://www.flexxo.com.br/Caxias+do+Sul/oportunidades/',
     'fsg': 'http://centraldecarreiras.fsg.br/candidatos',
     'hg': 'https://www.hgcs.com.br/trabalhe_conosco.php',
+    'ilumisol': 'https://www.ilumisolenergiasolar.com.br/trabalhe-conosco/',
     'randon': 'https://randon.gupy.io',
     'ucs': 'https://sou.ucs.br/recursos_humanos/cadastro_curriculo/'}
 headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linu…) Gecko/20100101 Firefox/65.0'.encode('utf-8')}
@@ -513,5 +514,34 @@ def fsg_get_all_jobs():
         except:
             pass
     return json.dumps(jobs_fsg) 
+
+
+'''
+Ilumisol
+'''
+
+
+def soup_ilumisol():
+    soup = get_soup(urls['ilumisol'])
+    return soup.find_all('td', {'class': 'td-actions text-right'})
+
+
+def ilumisol_link():
+    links = []
+    for t in soup_ilumisol():
+        if 'caxias-do-sul' in str(t):
+            links.append(t.a['href'])
+    return links
+
+
+@get('/jobs_ilumisol')
+def soup_ilumisol_job():
+    jobs_ilumisol = []
+    for job in ilumisol_link():
+        soup = get_soup(job)
+        h1 = soup.find('h1')
+        jobs_ilumisol.append({'vaga': h1.text, 'link': job})
+    return json.dumps(jobs_ilumisol)
+
 
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
