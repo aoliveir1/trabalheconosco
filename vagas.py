@@ -540,9 +540,12 @@ def ilumisol_link():
 def soup_ilumisol_job():
     jobs_ilumisol = []
     for job in ilumisol_link():
-        soup = get_soup(job)
-        h1 = soup.find('h1')
-        jobs_ilumisol.append({'vaga': h1.text, 'link': job})
+        try:
+            soup = get_soup(job)
+            h1 = soup.find('h1')
+            jobs_ilumisol.append({'vaga': h1.text, 'link': job})
+        except:
+            pass
     return json.dumps(jobs_ilumisol)
 
 
@@ -560,21 +563,24 @@ def soup_sperinde():
 def sperinde_jobs():
     jobs_sperinde = []
     for job in soup_sperinde():
-        soup = BeautifulSoup(str(job), 'html.parser')
-        job = soup.h4.text
-        job = str(job).strip()
-        soup = BeautifulSoup(str(soup), 'html.parser')
-        desc = soup.find('div', {'class': 'panel-body'})
-        soup = BeautifulSoup(str(desc), 'html.parser')
-        b = soup.find_all('b')
-        texto = (soup.text).replace(b[0].text, ' ').replace(b[1].text, ' ')
-        texto = texto.split('\n')
-        l = []
-        for t in texto:
-            t = t.strip()
-            if len(t) > 0:
-                l.append(t)
-        jobs_sperinde.append({'Vaga': job, str(b[0].text).replace(':', ''): l[0], str(b[1].text).replace(':', ''): l[1]})
+        try:
+            soup = BeautifulSoup(str(job), 'html.parser')
+            job = soup.h4.text
+            job = str(job).strip()
+            soup = BeautifulSoup(str(soup), 'html.parser')
+            desc = soup.find('div', {'class': 'panel-body'})
+            soup = BeautifulSoup(str(desc), 'html.parser')
+            b = soup.find_all('b')
+            texto = (soup.text).replace(b[0].text, ' ').replace(b[1].text, ' ')
+            texto = texto.split('\n')
+            l = []
+            for t in texto:
+                t = t.strip()
+                if len(t) > 0:
+                    l.append(t)
+            jobs_sperinde.append({'Vaga': job, str(b[0].text).replace(':', ''): l[0], str(b[1].text).replace(':', ''): l[1]})
+        except:
+            pass
     return json.dumps(jobs_sperinde)
 
 
