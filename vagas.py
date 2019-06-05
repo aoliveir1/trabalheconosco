@@ -579,7 +579,7 @@ def sperinde_jobs():
                 t = t.strip()
                 if len(t) > 0:
                     l.append(t)
-            jobs_sperinde.append({'Vaga': job, str(b[0].text).replace(':', ''): l[0], str(b[1].text).replace(':', ''): l[1]})
+            jobs_sperinde.append({'vaga': job, str(b[0].text).replace(':', ''): l[0], str(b[1].text).replace(':', ''): l[1]})
         return json.dumps(jobs_sperinde)
     except:
         pass
@@ -617,7 +617,7 @@ def soup_tw():
             valor = str(p.text).replace(chave, '').replace('\r\n', ' ').strip()
             items_dict.append((chave, valor))
         dict_tw = {}
-        dict_tw['Vaga:']= jobs[0][1]
+        dict_tw['vaga:']= jobs[0][1]
         for i in items_dict:
             dict_tw[i[0]] = i[1]
         print(dict_tw)
