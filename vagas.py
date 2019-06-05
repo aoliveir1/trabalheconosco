@@ -539,13 +539,14 @@ def ilumisol_link():
 @get('/jobs_ilumisol')
 def soup_ilumisol_job():
     jobs_ilumisol = []
-    for job in ilumisol_link():
-        try:
+    try:
+        for job in ilumisol_link():
             soup = get_soup(job)
             h1 = soup.find('h1')
             jobs_ilumisol.append({'vaga': h1.text, 'link': job})
-        except:
-            pass
+        return json.dumps(jobs_ilumisol)
+    except:
+        pass
     return json.dumps(jobs_ilumisol)
 
 
@@ -562,10 +563,9 @@ def soup_sperinde():
 @get('/jobs_sperinde')
 def sperinde_jobs():
     jobs_sperinde = []
-    for job in soup_sperinde():
-        try:
+    try:
+        for job in soup_sperinde():
             soup = BeautifulSoup(str(job), 'html.parser')
-            print('here sperinde')
             job = soup.h4.text
             job = str(job).strip()
             soup = BeautifulSoup(str(soup), 'html.parser')
@@ -580,8 +580,9 @@ def sperinde_jobs():
                 if len(t) > 0:
                     l.append(t)
             jobs_sperinde.append({'Vaga': job, str(b[0].text).replace(':', ''): l[0], str(b[1].text).replace(':', ''): l[1]})
-        except:
-            pass
+        return json.dumps(jobs_sperinde)
+    except:
+        pass
     return json.dumps(jobs_sperinde)
 
 
@@ -615,11 +616,12 @@ def soup_tw():
             chave = s.text
             valor = str(p.text).replace(chave, '').replace('\r\n', ' ').strip()
             items_dict.append((chave, valor))
-        dict = {}
-        dict['Vaga:']= jobs[0][1]
+        dict_tw = {}
+        dict_tw['Vaga:']= jobs[0][1]
         for i in items_dict:
-            dict[i[0]] = i[1]
-        jobs_tw.append(dict)
+            dict_tw[i[0]] = i[1]
+        print(dict_tw)
+        jobs_tw.append(dict_tw)
         
     return json.dumps(jobs_tw)
 
