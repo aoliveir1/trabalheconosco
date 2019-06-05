@@ -621,7 +621,7 @@ def soup_tw():
             valor = str(p.text).replace(chave, '').replace('\r\n', ' ').strip()
             items_dict.append((chave, valor))
         dict_tw = {}
-        dict_tw['vaga']= jobs[0][1]
+        dict_tw['vaga']= jobs[i][1]
         for i in items_dict:
             dict_tw[i[0]] = i[1]
         jobs_tw.append(dict_tw)
