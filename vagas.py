@@ -565,6 +565,7 @@ def sperinde_jobs():
     for job in soup_sperinde():
         try:
             soup = BeautifulSoup(str(job), 'html.parser')
+            print('here sperinde')
             job = soup.h4.text
             job = str(job).strip()
             soup = BeautifulSoup(str(soup), 'html.parser')
@@ -602,7 +603,7 @@ def soup_tw():
             job = BeautifulSoup(c, 'html.parser')
             job = job.find('td')
             jobs.append((i, job.text))
-
+    print('here tw')
     items_dict = []
     jobs_tw = []
     for i, x in enumerate(range(len(jobs))):
