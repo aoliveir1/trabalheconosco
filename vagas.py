@@ -15,6 +15,7 @@ urls = {
     'fsg': 'http://centraldecarreiras.fsg.br/candidatos',
     'hg': 'https://www.hgcs.com.br/trabalhe_conosco.php',
     'ilumisol': 'https://www.ilumisolenergiasolar.com.br/trabalhe-conosco/',
+    'intercity': 'https://ich.peoplenect.com/ats/external_applicant/index.php?page=ajax_quick_job&action=view',
     'randon': 'https://randon.gupy.io',
     'sperinde': 'https://www.sperinde.com/trabalhe/',
     'twtransportes': 'https://www.twtransportes.com.br/trabalhe/#',
@@ -647,6 +648,30 @@ def soup_unimed():
         local = str(td[1].text).strip()
         jobs_unimed.append({'vaga': vaga, 'local': local})
     return json.dumps(jobs_unimed)
+
+
+'''
+Intercity
+'''
+
+@get('/jobs_intercity')
+def soup_intercity():
+    import ssl
+    gcontext = ssl.SSLContext()
+    req = urllib.request.Request(urls['intercity'], headers=headers)
+    page = urllib.request.urlopen(req, context=gcontext)
+    soup = BeautifulSoup(page, 'html.parser')
+    soup = soup.find_all('tr')
+    jobs_intercity = []
+    for tr in soup:
+        tr = str(tr)
+        if 'Caxias do Sul-RS' in tr:
+            tr = BeautifulSoup(tr, 'html.parser')
+            tr = tr.find_all('td')
+            vaga = str(tr[3].text).strip()
+            codigo = str(tr[2].text).strip()
+            jobs_intercity.append({'vaga': vaga, 'codigo': codigo})
+    return json.dumps(jobs_intercity)
 
 
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
