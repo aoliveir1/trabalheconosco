@@ -604,7 +604,6 @@ def soup_tw():
             job = BeautifulSoup(c, 'html.parser')
             job = job.find('td')
             jobs.append((i, job.text))
-    print('here tw')
     items_dict = []
     jobs_tw = []
     for i, x in enumerate(range(len(jobs))):
@@ -617,12 +616,10 @@ def soup_tw():
             valor = str(p.text).replace(chave, '').replace('\r\n', ' ').strip()
             items_dict.append((chave, valor))
         dict_tw = {}
-        dict_tw['vaga:']= jobs[0][1]
+        dict_tw['vaga']= jobs[0][1]
         for i in items_dict:
             dict_tw[i[0]] = i[1]
-        print(dict_tw)
         jobs_tw.append(dict_tw)
-        
     return json.dumps(jobs_tw)
 
 
