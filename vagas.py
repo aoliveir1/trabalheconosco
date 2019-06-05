@@ -16,6 +16,7 @@ urls = {
     'hg': 'https://www.hgcs.com.br/trabalhe_conosco.php',
     'ilumisol': 'https://www.ilumisolenergiasolar.com.br/trabalhe-conosco/',
     'intercity': 'https://ich.peoplenect.com/ats/external_applicant/index.php?page=ajax_quick_job&action=view',
+    'nl': 'https://www.nl.com.br/trabalhe-conosco/',
     'randon': 'https://randon.gupy.io',
     'sperinde': 'https://www.sperinde.com/trabalhe/',
     'twtransportes': 'https://www.twtransportes.com.br/trabalhe/#',
@@ -672,6 +673,28 @@ def soup_intercity():
             codigo = str(tr[2].text).strip()
             jobs_intercity.append({'vaga': vaga, 'codigo': codigo})
     return json.dumps(jobs_intercity)
+
+
+'''
+NL
+'''
+
+
+@get('/jobs_nl')
+def soup_nl():
+    req = urllib.request.Request(urls['nl'], headers=headers)
+    page = urllib.request.urlopen(req).read()
+    soup = BeautifulSoup(page, 'html.parser')
+    jobs = soup.find_all('span', {'class': 'edgtf-tab-title-inner'})
+    desc1 = soup.find_all('span', {'class': 'edgtf-st-text-text'})
+    
+    jobs_nl = []
+    for i in range(0, len(jobs)):
+        job = str(jobs[i].text).strip().title()
+        d1 = str(desc1[i].text).strip()
+        jobs_nl.append({'vaga': job, 'descricao': d1})
+
+    return json.dumps(jobs_nl)
 
 
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
