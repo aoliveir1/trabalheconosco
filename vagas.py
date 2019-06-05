@@ -18,13 +18,16 @@ urls = {
     'randon': 'https://randon.gupy.io',
     'sperinde': 'https://www.sperinde.com/trabalhe/',
     'twtransportes': 'https://www.twtransportes.com.br/trabalhe/#',
-    'ucs': 'https://sou.ucs.br/recursos_humanos/cadastro_curriculo/'}
+    'ucs': 'https://sou.ucs.br/recursos_humanos/cadastro_curriculo/',
+    'unimed': 'https://sistemas.unimednordesters.com.br/vagas/'}
 headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linu…) Gecko/20100101 Firefox/65.0'.encode('utf-8')}
+
 
 def get_soup(url):
     req = urllib.request.Request(url, headers=headers)
     page = urllib.request.urlopen(req)
     return BeautifulSoup(page, 'html.parser')
+
 
 '''
 UCS
@@ -621,6 +624,29 @@ def soup_tw():
             dict_tw[i[0]] = i[1]
         jobs_tw.append(dict_tw)
     return json.dumps(jobs_tw)
+
+
+'''
+Unimed
+'''
+
+
+@get('/jobs_unimed')
+def soup_unimed():
+    jobs_unimed = []
+    soup = get_soup(urls['unimed'])
+    soup = soup.find('form', {'id': 'frmVagas'})
+    soup = BeautifulSoup(str(soup), 'html.parser')
+    soup = soup.find('tbody')
+    soup = BeautifulSoup(str(soup), 'html.parser')
+    soup = soup.find_all('tr')
+    for tr in soup:
+        tr = BeautifulSoup(str(tr), 'html.parser')
+        td = tr.find_all('td')
+        vaga = str(td[0].text).strip()
+        local = str(td[1].text).strip()
+        jobs_unimed.append({'vaga': vaga, 'local': local})
+    return json.dumps(jobs_unimed)
 
 
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
