@@ -690,8 +690,8 @@ def soup_intercity():
                         td = td.findAll('td')
                         chave = str(td[0].text).strip()
                         valor = str(td[1].text).strip()
-                        dictionary['vaga'] = dictionary.pop('Título da vaga:')
                         dict_intercity[chave] = valor
+                    dict_intercity['vaga'] = dict_intercity.pop('Título da vaga:')
                     jobs_intercity.append(dict_intercity)
     return json.dumps(jobs_intercity)
 
