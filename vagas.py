@@ -669,9 +669,28 @@ def soup_intercity():
         if 'Caxias do Sul-RS' in tr:
             tr = BeautifulSoup(tr, 'html.parser')
             tr = tr.find_all('td')
-            vaga = str(tr[3].text).strip()
             codigo = str(tr[2].text).strip()
-            jobs_intercity.append({'vaga': vaga, 'codigo': codigo})
+            url_vaga = 'https://ich.peoplenect.com/ats/external_applicant/?page=view_jobs_details&job_id=' + \
+                       str(codigo) + \
+                       '&pageno=1'
+            req = urllib.request.Request(url_vaga, headers=headers)
+            page = urllib.request.urlopen(req, context=gcontext)
+            soup = BeautifulSoup(page, 'html.parser')
+            soup = soup.find_all('div', {'class': 'container'})
+            for s in soup:
+                if 'Descrição de Vaga' in str(s):
+                    table = BeautifulSoup(str(s), 'html.parser')
+                    table = table.find('table')
+                    tr = BeautifulSoup(str(table), 'html.parser')
+                    tr = tr.findAll('tr')
+                    dict_intercity = {}
+                    for td in tr:
+                        td = BeautifulSoup(str(td), 'html.parser')
+                        td = td.findAll('td')
+                        chave = str(td[0].text).strip()
+                        valor = str(td[1].text).strip()
+                        dict_intercity[chave] = valor
+                    jobs_intercity.append(dict_intercity)
     return json.dumps(jobs_intercity)
 
 
