@@ -12,6 +12,7 @@ app = bottle.default_app()
 
 urls = {
     'flexxo': 'http://www.flexxo.com.br/Caxias+do+Sul/oportunidades/',
+    'fruki': 'https://jobs.kenoby.com/fruki/position',
     'fsg': 'http://centraldecarreiras.fsg.br/candidatos',
     'hg': 'https://www.hgcs.com.br/trabalhe_conosco.php',
     'ilumisol': 'https://www.ilumisolenergiasolar.com.br/trabalhe-conosco/',
@@ -716,6 +717,42 @@ def soup_nl():
         jobs_nl.append({'vaga': job, 'descricao': d1})
 
     return json.dumps(jobs_nl)
+
+
+'''
+Fruki
+'''
+
+
+def soup_fruki():
+    soup = get_soup(urls['fruki'])
+    return soup.findAll('div', {'class': 'segment'})
+
+
+def job_link():
+    links = []
+    soup = soup_fruki()
+    for segment in soup:
+        det = BeautifulSoup(str(segment), 'html.parser')
+        a = det.findAll('a')
+        for link in a:
+            if 'caxias-do-sul' in link['href']:
+                links.append(link['href'])
+    return links
+
+
+@get('/jobs_fruki')
+def fruki_jobs():
+    fruki_jobs = []
+    for link in job_link():
+        soup = get_soup(link)
+        soup = soup.find('article')
+        vaga = str(soup.h1.text).strip()
+        segmento = str(soup.h3.text).strip()
+        det = soup.find('div', {'class': 'description'})
+        det = str(det.text).strip()
+        fruki_jobs.append({'vaga': vaga, 'segmento': segmento, 'detalhes': det})
+    return json.dumps(fruki_jobs)
 
 
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
