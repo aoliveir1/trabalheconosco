@@ -271,6 +271,7 @@ def menon_get_all_jobs():
         for job in jobs:
             vaga = job.text.strip()
             vaga = vaga.replace('\xa0- \xa0', '').replace('\xa0p/ \xa0', '')
+            vaga = vaga.replace('\xa0', '')
             d_menon = {'vaga': vaga}
             v_menon.append(d_menon)
         return json.dumps(v_menon)
@@ -281,6 +282,7 @@ def menon_get_all_jobs():
 '''
 RBS
 '''
+
 @get('/jobs_rbs')
 def rbs_get_all_jobs():
     jobs_rbs = []
