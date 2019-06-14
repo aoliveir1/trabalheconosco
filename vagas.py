@@ -744,7 +744,7 @@ def job_link():
 
 
 @get('/jobs_fruki')
-def fruki_jobs():
+def fruki():
     fruki_jobs = []
     for link in job_link():
         soup = get_soup(link)
@@ -755,6 +755,52 @@ def fruki_jobs():
         det = str(det.text).strip()
         fruki_jobs.append({'vaga': vaga, 'segmento': segmento, 'detalhes': det})
     return json.dumps(fruki_jobs)
+
+
+'''
+Ambev
+'''
+
+
+def soup_ambev():
+    soup = get_soup(urls['ambev'])
+    soup = soup.findAll('div', {'class': 'job-list jobs-to-filter'})
+    soup = BeautifulSoup(str(soup), 'html.parser')
+    soup = soup.findAll('tr', {'data-type': 'Efetivo'})
+    soup = BeautifulSoup(str(soup), 'html.parser')
+    soup = soup.findAll('tr', {'data-workplace': 'Caxias do Sul'})
+    return soup
+
+def get_links():
+    links = []
+    soup = soup_ambev()
+    for a in soup:
+        links.append(a.a['href'])
+    return links
+
+@get('/jobs_ambev')
+def get_job():
+    jobs_ambev = []
+    links = get_links()
+    for job in links:
+        url = 'https://ambev.gupy.io/' + job
+        soup = get_soup(url)
+        job = soup.title.text
+        # soup = soup.find('script', {'type': 'application/ld+json'})
+        # soup = soup.contents[0]
+        # json_soup = json.loads(soup)
+        # desc = json_soup['description']
+        # desc = BeautifulSoup(str(desc), 'html.parser')        
+        # det = ''
+        # for d in desc:
+            # if len(d) > 0:
+            #     print(len(d), d)
+
+            # det = det + str(d.text) + '\n'
+        # print(det)
+        jobs_ambev.append({'vaga': job, 'link': url})
+        
+    return json.dumps(jobs_ambev)
 
 
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
