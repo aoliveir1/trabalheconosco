@@ -268,7 +268,9 @@ def menon_get_all_jobs():
         soup = BeautifulSoup(str(container), 'html.parser')
         jobs = soup.find_all('p', {'style': 'text-align: justify; '})
         for job in jobs:
-            d_menon = {'vaga': job.text.strip()}
+            vaga = job.text.strip()
+            vaga = vaga.replace('\xa0- \xa0', '').replace('\xa0p/ \xa0', '')
+            d_menon = {'vaga': vaga}
             v_menon.append(d_menon)
         return json.dumps(v_menon)
     except:
