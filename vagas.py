@@ -11,6 +11,7 @@ from pprint import pprint
 app = bottle.default_app()
 
 urls = {
+    'ambev' : 'https://ambev.gupy.io/',
     'flexxo': 'http://www.flexxo.com.br/Caxias+do+Sul/oportunidades/',
     'fruki': 'https://jobs.kenoby.com/fruki/position',
     'fsg': 'http://centraldecarreiras.fsg.br/candidatos',
