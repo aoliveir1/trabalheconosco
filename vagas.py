@@ -764,7 +764,7 @@ def get_job():
     jobs_ambev = []
     links = get_links()
     for job in links:
-        url = 'https://ambev.gupy.io/' + job
+        url = 'https://ambev.gupy.io' + job
         soup = get_soup(url)
         job = soup.title.text
         # soup = soup.find('script', {'type': 'application/ld+json'})
