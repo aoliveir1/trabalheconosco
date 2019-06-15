@@ -703,28 +703,6 @@ def soup_intercity():
 
 
 '''
-NL
-'''
-
-
-@get('/jobs_nl')
-def soup_nl():
-    req = urllib.request.Request(urls['nl'], headers=headers)
-    page = urllib.request.urlopen(req).read()
-    soup = BeautifulSoup(page, 'html.parser')
-    jobs = soup.find_all('span', {'class': 'edgtf-tab-title-inner'})
-    desc1 = soup.find_all('span', {'class': 'edgtf-st-text-text'})
-    
-    jobs_nl = []
-    for i in range(0, len(jobs)):
-        job = str(jobs[i].text).strip().title()
-        d1 = str(desc1[i].text).strip()
-        jobs_nl.append({'vaga': job, 'descricao': d1})
-
-    return json.dumps(jobs_nl)
-
-
-'''
 Fruki
 '''
 
@@ -748,7 +726,7 @@ def job_link():
 
 @get('/jobs_fruki')
 def fruki():
-    fruki_jobs = []
+    jobs_fruki = []
     for link in job_link():
         soup = get_soup(link)
         soup = soup.find('article')
@@ -756,8 +734,8 @@ def fruki():
         segmento = str(soup.h3.text).strip()
         det = soup.find('div', {'class': 'description'})
         det = str(det.text).strip()
-        fruki_jobs.append({'vaga': vaga, 'segmento': segmento, 'detalhes': det})
-    return json.dumps(fruki_jobs)
+        jobs_fruki.append({'vaga': vaga, 'segmento': segmento, 'detalhes': det})
+    return json.dumps(jobs_fruki)
 
 
 '''
@@ -804,6 +782,30 @@ def get_job():
         jobs_ambev.append({'vaga': job, 'link': url})
         
     return json.dumps(jobs_ambev)
+
+'''
+NL
+'''
+
+
+@get('/jobs_nl')
+def soup_nl():
+    req = urllib.request.Request(urls['nl'], headers=headers)
+    page = urllib.request.urlopen(req).read()
+    soup = BeautifulSoup(page, 'html.parser')
+    jobs = soup.find_all('span', {'class': 'edgtf-tab-title-inner'})
+    desc1 = soup.find_all('span', {'class': 'edgtf-st-text-text'})
+    
+    jobs_nl = []
+    for i in range(0, len(jobs)):
+        job = str(jobs[i].text).strip().title()
+        d1 = str(desc1[i].text).strip()
+        jobs_nl.append({'vaga': job, 'descricao': d1})
+
+    return json.dumps(jobs_nl)
+
+
+
 
 
 run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
