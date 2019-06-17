@@ -652,8 +652,15 @@ def soup_unimed():
         tr = BeautifulSoup(str(tr), 'html.parser')
         td = tr.find_all('td')
         vaga = str(td[0].text).strip()
+        try:
+            det0 = vaga.find('(')
+            det1 = vaga.find(')', det0)
+            det = vaga[det0+1:det1].capitalize()
+            vaga = vaga[:det0]
+        except:
+            det = 'Não informado.'
         local = str(td[1].text).strip()
-        jobs_unimed.append({'vaga': vaga, 'local': local})
+        jobs_unimed.append({'vaga': vaga, 'descricao': det, 'local': local})
     return json.dumps(jobs_unimed)
 
 
