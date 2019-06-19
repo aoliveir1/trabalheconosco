@@ -157,10 +157,10 @@ def flexxo_description(link):
 
 @get('/jobs_flexxo')
 def flexxo_get_all_jobs():
-    print('here')
     jobs_flexxo = []
     soup = soup_flexxo()
     try:
+        print('here')
         for job in zip(soup[0], soup[1]):
             soup = BeautifulSoup(str(job), 'html.parser')
             links = soup.find_all('a')
