@@ -159,7 +159,6 @@ def flexxo_description(link):
 def flexxo_get_all_jobs():
     jobs_flexxo = []
     soup = soup_flexxo()
-  
     for job in zip(soup[0], soup[1]):
         try:
             soup = BeautifulSoup(str(job), 'html.parser')
@@ -180,9 +179,9 @@ def flexxo_get_all_jobs():
                 if (vaga is not None) or (descricao is not None) or (link is not None):
                     jobs_flexxo.append({'vaga': vaga, 'descricao': descricao, 'link': link})
                 else:
-                    print('ops')
+                    print('flexxo não adiciou vaga')
         except:
-            print('except')
+            print('except flexxo')
 
         return json.dumps(jobs_flexxo)
 
