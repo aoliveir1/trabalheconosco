@@ -140,7 +140,6 @@ Flexxo
 '''
 def soup_flexxo():
     soup = get_soup(urls['flexxo'])
-    print(soup)
     return (soup.find_all('div', {'class': 'oportunidade rounded'}),
             soup.find_all('div', {'class': 'oportunidade rounded last'}))
 
@@ -158,6 +157,7 @@ def flexxo_description(link):
 
 @get('/jobs_flexxo')
 def flexxo_get_all_jobs():
+    print('here')
     jobs_flexxo = []
     soup = soup_flexxo()
     try:
