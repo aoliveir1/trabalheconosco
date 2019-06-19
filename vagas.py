@@ -181,8 +181,8 @@ def flexxo_get_all_jobs():
                     jobs_flexxo.append({'vaga': vaga, 'descricao': descricao, 'link': link})
                 else:
                     print('ops')
-            except:
-                print('except')
+        except:
+            print('except')
 
         return json.dumps(jobs_flexxo)
 
