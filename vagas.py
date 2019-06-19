@@ -140,6 +140,7 @@ Flexxo
 '''
 def soup_flexxo():
     soup = get_soup(urls['flexxo'])
+    print(soup)
     return (soup.find_all('div', {'class': 'oportunidade rounded'}),
             soup.find_all('div', {'class': 'oportunidade rounded last'}))
 
