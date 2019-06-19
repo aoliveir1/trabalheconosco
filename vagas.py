@@ -159,9 +159,9 @@ def flexxo_description(link):
 def flexxo_get_all_jobs():
     jobs_flexxo = []
     soup = soup_flexxo()
-    try:
-        print('here')
-        for job in zip(soup[0], soup[1]):
+  
+    for job in zip(soup[0], soup[1]):
+        try:
             soup = BeautifulSoup(str(job), 'html.parser')
             links = soup.find_all('a')
             for link in links:
@@ -181,9 +181,12 @@ def flexxo_get_all_jobs():
                     jobs_flexxo.append({'vaga': vaga, 'descricao': descricao, 'link': link})
                 else:
                     print('ops')
+            except:
+                print('except')
+
         return json.dumps(jobs_flexxo)
-    except:
-        print('erro em flexxo')
+
+#         print('erro em flexxo')
     return json.dumps(jobs_flexxo)
 
     
