@@ -18,6 +18,7 @@ urls = {
     'hg': 'https://www.hgcs.com.br/trabalhe_conosco.php',
     'ilumisol': 'https://www.ilumisolenergiasolar.com.br/trabalhe-conosco/',
     'intercity': 'https://ich.peoplenect.com/ats/external_applicant/index.php?page=ajax_quick_job&action=view',
+    'mundial-sa': 'http://mundial-sa.com.br/carreira_vagas-disponiveis.php',
     'nl': 'https://www.nl.com.br/trabalhe-conosco/',
     'randon': 'https://randon.gupy.io',
     'sperinde': 'https://www.sperinde.com/trabalhe/',
@@ -815,6 +816,44 @@ def soup_nl():
         jobs_nl.append({'vaga': job, 'descricao': d1})
 
     return json.dumps(jobs_nl)
+
+
+'''
+Mundial SA
+'''
+
+def soup_mundial_sa():
+    soup = get_soup(urls['mundial-sa'])
+    soup = soup.find('div', {'class': 'wrap'})
+    soups = []
+    for s in soup:
+        if 'Caxias do Sul' in str(s) and 'Unidade de atuação:' in str(s):
+            soups.append(s)
+    return soups
+
+@get('/jobs_mundial_sa')
+def jobs_mundial_sa():
+    soups = soup_mundial_sa()
+    list_mundial_sa = []
+    for soup in soups:
+        titulo_vaga = soup.find('div', {'class': 'titulo_vagas'}).text
+        titulo_vaga = str(titulo_vaga).title()
+        p = soup.find('p')
+        chave = p.findAll('strong')
+        value = []
+        dict_mundial_sa = {}
+        for i in p:
+            if len(i) > 1 and 'strong' not in str(i):
+                value.append(i)
+        dict_mundial_sa['vaga'] = titulo_vaga
+        for k, v in zip(chave, value):
+            k = k.text
+            k = str(k).replace(':', '')
+            v = str(v).strip()
+            dict_mundial_sa[k] = v
+
+        list_mundial_sa.append(dict_mundial_sa)
+    return json.dumps(list_mundial_sa)
 
 
 
