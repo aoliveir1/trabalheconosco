@@ -21,6 +21,7 @@ urls = {
     'mundial-sa': 'http://mundial-sa.com.br/carreira_vagas-disponiveis.php',
     'nl': 'https://www.nl.com.br/trabalhe-conosco/',
     'randon': 'https://randon.gupy.io',
+    'sicredi': 'https://sicredi.gupy.io',
     'sperinde': 'https://www.sperinde.com/trabalhe/',
     'twtransportes': 'https://www.twtransportes.com.br/trabalhe/#',
     'ucs': 'https://sou.ucs.br/recursos_humanos/cadastro_curriculo/',
@@ -854,6 +855,38 @@ def jobs_mundial_sa():
 
         list_mundial_sa.append(dict_mundial_sa)
     return json.dumps(list_mundial_sa)
+
+
+'''
+Sicredi
+'''
+
+def soup_sicredi():
+    soup = get_soup(urls['sicredi'])
+    return soup.find_all('tr', {'data-workplace': 'Caxias do Sul'})
+
+def sicredi_jobs(soup):
+    vaga = soup.find('span', {'class': 'title'})
+    return str(vaga.text).strip()
+
+def sicredi_url(job):
+    return urls['sicredi'] + job.a['href']
+
+@get('/jobs_sicredi')
+def sicredi_get_all_jobs():
+    v_sicredi = []
+    try:
+        for job in soup_sicredi():
+            vaga = sicredi_jobs(job)
+            url = sicredi_url(job)
+            d_sicredi = {'vaga': vaga, 'url': url}
+            v_sicredi.append(d_sicredi)
+        return json.dumps(v_sicredi)
+    except:
+        print('erro em sicredi')
+        pass
+
+    return json.dumps(v_sicredi)
 
 
 
