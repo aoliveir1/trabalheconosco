@@ -23,6 +23,7 @@ urls = {
     'randon': 'https://randon.gupy.io',
     'sicredi': 'https://sicredi.gupy.io',
     'sperinde': 'https://www.sperinde.com/trabalhe/',
+    'swan': 'https://www.swanhoteis.com.br/trabalhe-conosco?hotel=4',
     'twtransportes': 'https://www.twtransportes.com.br/trabalhe/#',
     'ucs': 'https://sou.ucs.br/recursos_humanos/cadastro_curriculo/',
     'unimed': 'https://sistemas.unimednordesters.com.br/vagas/'}
@@ -889,6 +890,24 @@ def sicredi_get_all_jobs():
     return json.dumps(v_sicredi)
 
 
+'''
+Swan
+'''
+@get('/jobs_swan')
+def soup_swan():
+    v_swan = []
+    soup = get_soup(urls['swan'])
+    soup = soup.findAll('div', {'class': 'trabalhe-conosco-vagas'})
+    for s in soup:
+        job = str(s.h4.text).strip()
+        p = BeautifulSoup(str(s), 'html.parser')
+        p = p.findAll('p')
+        desc = ''
+        for i in p:
+            desc = desc + i.text + '\n'
+        d_swan = {'vaga': job, 'desc': desc}
+        v_swan.append(d_swan)
+    return json.dumps(v_swan)
 
 
 
