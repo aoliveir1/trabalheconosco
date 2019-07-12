@@ -26,6 +26,7 @@ urls = {
     'swan': 'https://www.swanhoteis.com.br/trabalhe-conosco?hotel=4',
     'twtransportes': 'https://www.twtransportes.com.br/trabalhe/#',
     'ucs': 'https://sou.ucs.br/recursos_humanos/cadastro_curriculo/',
+    'uniftec': 'https://ceo.ftec.com.br/vagas.php?cat=0',
     'unimed': 'https://sistemas.unimednordesters.com.br/vagas/'}
 headers = {'User-Agent': 'Mozilla/5.0 (X11; Fedora; Linu…) Gecko/20100101 Firefox/65.0'.encode('utf-8')}
 
@@ -908,6 +909,57 @@ def soup_swan():
         d_swan = {'vaga': job, 'desc': desc}
         v_swan.append(d_swan)
     return json.dumps(v_swan)
+
+
+'''
+Uniftec
+'''
+def soup_uniftec():
+    soup = get_soup(urls['uniftec'])
+    soup = soup.find('fieldset')
+    soup = BeautifulSoup(str(soup), 'html.parser')
+    return soup.findAll('div', {'class': 'Caxias-do-Sul'})
+
+def uniftec_get_link():
+    links_emprego = []
+    links_estagio = []
+    url = 'https://ceo.ftec.com.br/'
+    for i in soup_uniftec():
+        link = url + i.a['href']
+        if 'Estágio' not in str(i) and 'estágio' not in str(i):
+            links_emprego.append(link)
+        else:
+            links_estagio.append(link)
+    return links_emprego, links_estagio
+
+def uniftec_get_job(link):
+    soup = get_soup(link)
+    soup = soup.find('div', {'id': 'cont'})
+    return soup.h1.text
+
+def unifet_get_job_desc(link):
+    soup = get_soup(link)
+    soup = soup.find('fieldset', {'id': 'detalheVaga'})
+    desc = soup.dl.text
+    desc = str(desc).lstrip('''Unidade
+ Caxias do Sul
+Tipo da Vaga
+ Emprego
+Mais Informações''')
+    desc = desc.rstrip('''
+
+Para se cadastrar precisa fazer o login.''')
+    return desc
+
+@get('/jobs_uniftec')
+def unifet_get_all_jobs():
+    v_uniftec = []
+    for link in uniftec_get_link()[0]:
+        vaga = uniftec_get_job(link)
+        desc = unifet_get_job_desc(link)
+        d_uniftec = {'vaga': vaga, 'desc': desc, 'link': link}
+        v_uniftec.append(d_uniftec)
+    return json.dumps(v_uniftec)
 
 
 
