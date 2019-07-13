@@ -951,6 +951,7 @@ Mais Informações''')
 Para se cadastrar precisa fazer o login.''')
     return desc
 
+@get('/jobs_uniftec')
 def unifet_get_all_jobs():
     v_uniftec = []
     cont = 0
@@ -960,9 +961,9 @@ def unifet_get_all_jobs():
         d_uniftec = {'vaga': vaga, 'desc': desc, 'link': link}
         v_uniftec.append(d_uniftec)
         cont += 1
-        if cont >= 10:
+        if cont >= 20:
             break
-    return v_uniftec
+    return json.dumps(v_uniftec)
 
 
 
