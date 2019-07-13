@@ -936,12 +936,18 @@ def uniftec_get_link():
     return links_emprego, links_estagio
 
 def uniftec_get_job(link):
-    soup = get_soup(link)
+    # soup = get_soup(link)
+    s = requests.Session()
+    r = s.get(link)
+    soup = BeautifulSoup(str(r.text), 'html.parser')
     soup = soup.find('div', {'id': 'cont'})
     return soup.h1.text
 
 def unifet_get_job_desc(link):
-    soup = get_soup(link)
+    # soup = get_soup(link)
+    s = requests.Session()
+    r = s.get(link)
+    soup = BeautifulSoup(str(r.text), 'html.parser')
     soup = soup.find('fieldset', {'id': 'detalheVaga'})
     desc = soup.dl.text
     desc = str(desc).lstrip('''Unidade
