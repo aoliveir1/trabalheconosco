@@ -935,7 +935,8 @@ def uniftec_get_link():
 def uniftec_get_job(link):
     soup = get_soup(link)
     soup = soup.find('div', {'id': 'cont'})
-    return soup.h1.text
+    soup = str(soup.h1.text).title()
+    return soup
 
 def unifet_get_job_desc(link):
     soup = get_soup(link)
