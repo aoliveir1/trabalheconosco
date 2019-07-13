@@ -917,7 +917,6 @@ Uniftec
 def soup_uniftec():
     s = requests.Session()
     r = s.get(urls['uniftec'])
-    print(r.text)
     soup = BeautifulSoup(str(r.text), 'html.parser')
     soup = soup.find('fieldset')
     soup = BeautifulSoup(str(soup), 'html.parser')
@@ -939,6 +938,7 @@ def uniftec_get_job(link):
     # soup = get_soup(link)
     s = requests.Session()
     r = s.get(link)
+    print(r.text)
     soup = BeautifulSoup(str(r.text), 'html.parser')
     soup = soup.find('div', {'id': 'cont'})
     return soup.h1.text
