@@ -915,7 +915,9 @@ def soup_swan():
 Uniftec
 '''
 def soup_uniftec():
-    soup = get_soup(urls['uniftec'])
+    s = requests.Session()
+    r = s.get(urls['uniftec'])
+    soup = BeautifulSoup(str(r.text), 'html.parser')
     soup = soup.find('fieldset')
     soup = BeautifulSoup(str(soup), 'html.parser')
     return soup.findAll('div', {'class': 'Caxias-do-Sul'})
