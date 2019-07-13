@@ -915,9 +915,7 @@ def soup_swan():
 Uniftec
 '''
 def soup_uniftec():
-    s = requests.Session()
-    r = s.get(urls['uniftec'])
-    soup = BeautifulSoup(str(r.text), 'html.parser')
+    soup = get_soup(urls['uniftec'])
     soup = soup.find('fieldset')
     soup = BeautifulSoup(str(soup), 'html.parser')
     return soup.findAll('div', {'class': 'Caxias-do-Sul'})
@@ -935,19 +933,12 @@ def uniftec_get_link():
     return links_emprego, links_estagio
 
 def uniftec_get_job(link):
-    # soup = get_soup(link)
-    s = requests.Session()
-    r = s.get(link)
-    print(r.text)
-    soup = BeautifulSoup(str(r.text), 'html.parser')
+    soup = get_soup(link)
     soup = soup.find('div', {'id': 'cont'})
     return soup.h1.text
 
 def unifet_get_job_desc(link):
-    # soup = get_soup(link)
-    s = requests.Session()
-    r = s.get(link)
-    soup = BeautifulSoup(str(r.text), 'html.parser')
+    soup = get_soup(link)
     soup = soup.find('fieldset', {'id': 'detalheVaga'})
     desc = soup.dl.text
     desc = str(desc).lstrip('''Unidade
@@ -960,7 +951,6 @@ Mais Informações''')
 Para se cadastrar precisa fazer o login.''')
     return desc
 
-@get('/jobs_uniftec')
 def unifet_get_all_jobs():
     v_uniftec = []
     cont = 0
@@ -970,9 +960,10 @@ def unifet_get_all_jobs():
         d_uniftec = {'vaga': vaga, 'desc': desc, 'link': link}
         v_uniftec.append(d_uniftec)
         cont += 1
-        if cont >= 10:
+        if cont >= 20:
             break
-    return json.dumps(v_uniftec)
+    return v_uniftec
+
 
 
 
