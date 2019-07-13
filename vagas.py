@@ -917,6 +917,7 @@ Uniftec
 def soup_uniftec():
     s = requests.Session()
     r = s.get(urls['uniftec'])
+    print(r.text)
     soup = BeautifulSoup(str(r.text), 'html.parser')
     soup = soup.find('fieldset')
     soup = BeautifulSoup(str(soup), 'html.parser')
