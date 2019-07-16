@@ -960,7 +960,7 @@ def unifet_get_all_jobs():
         print(link)
         vaga = uniftec_get_job(link)
         desc = unifet_get_job_desc(link)
-        if vaga, desc, link:
+        if vaga and desc and link:
             d_uniftec = {'vaga': vaga, 'desc': desc, 'link': link}
             v_uniftec.append(d_uniftec)
             cont += 1
