@@ -915,7 +915,6 @@ def soup_swan():
 Uniftec
 '''
 def soup_uniftec():
-    print('soup ftec')
     soup = get_soup(urls['uniftec'])
     soup = soup.find('fieldset')
     soup = BeautifulSoup(str(soup), 'html.parser')
@@ -958,6 +957,7 @@ def unifet_get_all_jobs():
     v_uniftec = []
     cont = 0
     for link in uniftec_get_link()[0]:
+        print(link)
         try:
             vaga = uniftec_get_job(link)
             desc = unifet_get_job_desc(link)
@@ -967,7 +967,7 @@ def unifet_get_all_jobs():
             if cont >= 20:
                 break
         except:
-            print(link)
+            print('except', link)
             break
     return json.dumps(v_uniftec)
 
