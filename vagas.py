@@ -966,7 +966,8 @@ def unifet_get_all_jobs():
             if cont >= 20:
                 break
         except:
-            pass
+            print(link)
+            break
     return json.dumps(v_uniftec)
 
 
