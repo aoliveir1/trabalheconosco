@@ -956,6 +956,7 @@ Para se cadastrar precisa fazer o login.''')
 def unifet_get_all_jobs():
     v_uniftec = []
     cont = 0
+    print(len(uniftec_get_link()[0]))
     for link in uniftec_get_link()[0]:
         vaga = uniftec_get_job(link)
         desc = unifet_get_job_desc(link)
