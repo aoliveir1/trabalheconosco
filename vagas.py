@@ -965,7 +965,8 @@ def unifet_get_all_jobs():
         cont += 1
         if cont >= 10:
             break
-    for link in uniftec_get_link()[0][10:]:
+    cont = 0
+    for link in uniftec_get_link()[0][9:]:
         vaga = uniftec_get_job(link)
         desc = unifet_get_job_desc(link)
         d_uniftec = {'vaga': vaga, 'desc': desc, 'link': link}
