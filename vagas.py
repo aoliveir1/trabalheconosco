@@ -962,7 +962,7 @@ def unifet_get_all_jobs():
         d_uniftec = {'vaga': vaga, 'desc': desc, 'link': link}
         v_uniftec.append(d_uniftec)
         cont += 1
-        if cont >= 12:
+        if cont >= 11:
             break     
             
     return json.dumps(v_uniftec)
