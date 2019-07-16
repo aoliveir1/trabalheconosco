@@ -956,24 +956,15 @@ Para se cadastrar precisa fazer o login.''')
 def unifet_get_all_jobs():
     v_uniftec = []
     cont = 0
-    print(len(uniftec_get_link()[0]))
     for link in uniftec_get_link()[0]:
         vaga = uniftec_get_job(link)
         desc = unifet_get_job_desc(link)
         d_uniftec = {'vaga': vaga, 'desc': desc, 'link': link}
         v_uniftec.append(d_uniftec)
         cont += 1
-        if cont >= 10:
-            break
-    cont = 0
-    for link in uniftec_get_link()[0][9:]:
-        vaga = uniftec_get_job(link)
-        desc = unifet_get_job_desc(link)
-        d_uniftec = {'vaga': vaga, 'desc': desc, 'link': link}
-        v_uniftec.append(d_uniftec)
-        cont += 1
-        if cont >= 10:
-            break            
+        if cont >= 12:
+            break     
+            
     return json.dumps(v_uniftec)
 
 
