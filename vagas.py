@@ -915,6 +915,7 @@ def soup_swan():
 Uniftec
 '''
 def soup_uniftec():
+    print('soup ftec')
     soup = get_soup(urls['uniftec'])
     soup = soup.find('fieldset')
     soup = BeautifulSoup(str(soup), 'html.parser')
