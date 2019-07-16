@@ -958,17 +958,14 @@ def unifet_get_all_jobs():
     cont = 0
     for link in uniftec_get_link()[0]:
         print(link)
-        try:
-            vaga = uniftec_get_job(link)
-            desc = unifet_get_job_desc(link)
+        vaga = uniftec_get_job(link)
+        desc = unifet_get_job_desc(link)
+        if vaga, desc, link:
             d_uniftec = {'vaga': vaga, 'desc': desc, 'link': link}
             v_uniftec.append(d_uniftec)
             cont += 1
             if cont >= 20:
                 break
-        except:
-            print('except', link)
-            break
     return json.dumps(v_uniftec)
 
 
